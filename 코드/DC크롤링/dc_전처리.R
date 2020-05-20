@@ -1,9 +1,8 @@
 library(readr)
 library(dplyr)
 
-setwd('c:\\Users\\user\\Desktop')
-getwd()
-dir = 'c:\\Users\\user\\Desktop\\test'
+setwd('.\\data\\dc_raw_data')
+dir = getwd()
 file_list = list.files(dir)
 
 tb =tibble()

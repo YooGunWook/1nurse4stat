@@ -1,5 +1,6 @@
 library(tidyverse)
 
+setwd(.\\data)
 getwd()
 
 ###########
