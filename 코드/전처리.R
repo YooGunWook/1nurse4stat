@@ -469,32 +469,25 @@ table(data$rank)
 ######################### Google Trend by 오태환 ----------------------------------------------------------------------
 
 ###data import ###
-ggtrend<-read_csv("~/Desktop/dsproject/data/googletrend.csv")
+ggtrend<-read_csv("~/Desktop/dsproject/data/googletrend크롤링.csv")
 data<-ggtrend
 names(data)[1]<-"st_day"
-names(data)[105]<-"X1"
-data$Sondia_1<-NULL
-data$최진호_1<-NULL
-data$문성욱_1<-NULL
-data$창모_1<-NULL
-data$방탄소년단_1<-NULL
-data$슬기_1<-NULL
-names(data)
-data[434]<-NULL
+names(data)[369]<-"X1"
+data$양요섭_1<-NULL
 
 data$st_day<-ymd(data$st_day)
-dim(table(basic$st_day))
 dim(data)
 
 ###structure change
-data<-gather(data,names(data)[2]:names(data)[462],key="artist",value="gg_score")
+data<-gather(data,names(data)[2]:names(data)[441],key="artist",value="gg_score")
 
 ###merge in gaon chart and google trend
+basic<-final0511
 basic$gg_score<-NULL
 
 basic2<-left_join(basic,data,by=c("st_day","artist"))
 
-###gg_score없는것을 none파일로 만ᄃ어 
+###gg_scoreᄋ는것을 none파일로 만들어 
 none<-basic2[is.na(basic2$gg_score),]
 
 none<-subset(none,select=c("id","st_day","artist"))
@@ -515,34 +508,33 @@ none<-bind_cols(none,artist3)
 ### ggscore을 붙이면 됨. 
 none2<-none %>% gather(X1:X6,key="x",value="artist") %>% select(id,st_day,artist) 
 
-###data와 none을 머지
+###data와 none을 머
 none3<-merge(none2,data,by=c("artist","st_day"),all = TRUE)
 none3<-none3[is.na(none3$gg_score)==FALSE,] #ggscore 없는것 삭제
 none3<-none3[is.na(none3$id)==FALSE,] #id 없는것 삭제
 
-###가수 둘 이상의 점수 합ᄀ
+###가ᄉ 둘 이상의 점수 합계내기
 a<-none3 %>% group_by(id) %>% summarise_at(vars(gg_score),list(name=mean)) 
 names(a)[2]<-"gg_score"
 new<-left_join(none,a,by="id") %>% select(id,gg_score)
 
-###합계내기
-basic3<-left_join(basic2,new,by="id") #가온차트ᄃ 평균 낸 데이터 합치기 
+###합계ᄂ
+basic3<-left_join(basic2,new,by="id") #가온차트데이터와 평균 낸 데이터 합치기 
 basic3$gg_score<-ifelse(is.na(basic3$gg_score.x)==TRUE,basic3$gg_score.y,basic3$gg_score.x)
 basic3$gg_score<-round(basic3$gg_score,digit=1) # 소수점   
 
-#정마 값이 없는 데이터 확인 
+#정말 값이 없는 데이터 확인 
 a<-basic3[is.na(basic3$gg_score)==TRUE,] 
 
-basic4$gg_score[is.na(basic3$gg_score)]=0 #값이 없는 데이터에 "0"입
+basic3$gg_score[is.na(basic3$gg_score)]=0 #ᄀ이 없는 데이터에 "0"입
 
-basic4$gg_score.x<-NULL
-basic4$gg_score.y<-NULL
+basic3$gg_score.x<-NULL
+basic3$gg_score.y<-NULL
 
-basic<-basic4
+basic<-basic3
 
-#write.csv(basic,"data/basic_dc_you_gg_0511.csv") 
-#save(basic, file="data/basic_dc_you_gg_0511.RData")
-
+write.csv(basic,"data/basic_dc_you_gg_0511_pm.csv") 
+save(basic, file="data/basic_dc_you_gg_0511_pm.RData")
 
 
 # Naver Trend by 오태환 ------------------------------------------------------
@@ -551,7 +543,7 @@ naver<-read_csv("~/Desktop/dsproject/data/navertrend크롤링.csv
 data<-naver
 
 names(data)[1]<-"st_day"
-names(data)
+names(data)[425]<-"X1"
 data$st_day<-ymd(data$st_day)
 
 #basic과 navertrend의 날짜 맞추기 
@@ -559,11 +551,11 @@ data$st_day<-data$st_day-1
 
 #structure change
 dim(data)
-data<-gather(data,names(data)[2]:names(data)[476],key="artist",value="nv_score")
+data<-gather(data,names(data)[2]:names(data)[477],key="artist",value="nv_score")
 
 #merge in basic and naver trend
 basic$nv_score<-NULL
-basic2<-left_join(basic,data,by=c("st_day","artist"))#기본+네ᄋ
+basic2<-left_join(basic,data,by=c("st_day","artist"))#기본+네이버
 
 #nv_score없는것을 none파일로 만들어 
 none<-basic2[is.na(basic2$nv_score),]
@@ -598,19 +590,19 @@ names(a)[2]<-"nv_score"
 new<-left_join(none,a,by="id") %>% select(id,nv_score)
 
 #합계내기
-basic3<-left_join(basic2,new,by="id") #가온차트데이터와 평균 낸 데이터 합치기 
+basic3<-left_join(basic2,new,by="id") #가온차트데이 평균 낸 데이터 합치기 
 basic3$nv_score<-ifelse(is.na(basic3$nv_score.x)==TRUE,basic3$nv_score.y,basic3$nv_score.x)
 basic3$nv_score<-round(basic3$nv_score,digit=1) # 소수점   
 
-#정말 값이 없는 데이터 확인 
+#정마 값이 없는 데이터 확인 
 a<-basic3[is.na(basic3$nv_score)==TRUE,] 
 
-basic4$nv_score[is.na(basic4$nv_score)]=0 #값이 없는 데이터에 "0"입
+basic3$nv_score[is.na(basic3$nv_score)]=0 #값이 없는 데이터에 "0"입
 
-basic4$nv_score.x<-NULL
-basic4$nv_score.y<-NULL
+basic3$nv_score.x<-NULL
+basic3$nv_score.y<-NULL
 
-final0511<-basic4
-#write.csv(final0511,"data/basic_dc_you_gg_nv_0511.csv") 
-#save(final0511, file="data/basic_dc_you_gg_nv_0511.RData")
+final0511<-basic3
+write.csv(final0511,"data/basic_dc_you_gg_nv_0511_pm.csv") 
+save(final0511, file="data/basic_dc_you_gg_nv_0511_pm.RData")
 
