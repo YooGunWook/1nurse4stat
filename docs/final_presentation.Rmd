@@ -1,8 +1,8 @@
 ---
-title: "음원 데이터를 활용한 주간음원순위 예측"
+title: "[음원 데이터를 활용한 주간음원순위 예측](https://github.com/YooGunWook/1nurse4stat)"
 subtitle: "[2020-01 데이터사이언스입문 프로젝트](https://statkclee.github.io/ds-intro-2020/)"
 author: 
-    name: "사응일간 (강동원, 백원희, 오태환, 유건욱, [이청파](https://github.com/leechungpa))"
+    name: "사응일간 ([강동원](https://github.com/dw3624), [백원희](https://github.com/Wonhee-baek), [오태환](https://github.com/dhxoghks95), [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa))"
 date: '최종수정일 : `r Sys.Date()`'
 output:
   html_document: 
@@ -26,9 +26,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 추가적으로 이러한 지표를 이용하기 위해 소위 ['음원 사재기'](https://namu.wiki/w/%EC%9D%8C%EC%9B%90%20%EC%82%AC%EC%9E%AC%EA%B8%B0)로 불리는 논란이 지속되고 있다. 따라서 우리는 기존의 음원 데이터를 바탕으로 음원순위를 예측모형을 만들고, 예측 모형에 크게 벗어나는 결과가 나오다면, 음원 사재기와 같은 음원 시장 혼란 요인을 찾을 수 있을 것이다. 따라서 우리의 목표는 다음이다.
 
+<br>
 <center> **음원 데이터를 활용한 주간음원순위 예측** </center>
+<br>
 
-   
 음원 시장은 시대의 특성이 반영되며 기존의 음반 산업과 다르게 '다양한 변수에 의해 영향을 받는 시장'(추승엽 외, 2016)으로 변화 하고 있다. 특히 변화하는 트랜드에 따라 '음원 시장은 유투브, SNS, 인터넷 사이트 등 다양한 플랫폼의 영향이 커지고'(김가연 외, 2018) 있다. 따라서 우리는 선행논문들을 참고하여 다음의 사이트에서 제공되는 데이터를 활용해 주간음원순위를 예측해 보고자 한다.
 
 - [가온차트](http://www.gaonchart.co.kr/main/section/chart/online.gaon?nationGbn=T&serviceGbn=ALL) : 주간 가온차트 순위
@@ -43,62 +44,75 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - [네이버 데이터랩](https://datalab.naver.com/) : 가수명에 따른 네이버 트렌드
 
-- [nielsen코리아](https://www.nielsenkorea.co.kr/tv_terrestrial_day.asp?menu=Tit_1&sub_menu=1_1&area=01) : OST 프로그램에 따른 지상파, 종합편성, 케이블 일일 순위 데이터 
+- [Nielsen코리아](https://www.nielsenkorea.co.kr/tv_terrestrial_day.asp?menu=Tit_1&sub_menu=1_1&area=01) : OST 프로그램에 따른 지상파, 종합편성, 케이블 일일 순위 데이터 
 
-이상 8개의 사이트의 정보 중 **2018년 4월 이후**(유튜브 데이터가 그 시점 부터 제공되기에 해당 일자를 기준일로 정하였다.)의 정보를 크롤링하여 음원 데이터를 얻었다. 해당 데이터를 기본적으로 **기간**(주를 단위로 매주 일요일부터 토요일까지), **곡명**, **가수명**를 key로 합쳤다. 그러기 위해 각각 기간에 맞게 전처리를 실시하였다. 예를 들어 DC데이터의 경우 갤럴리명(가수명)별로 주간 기준에 따라 분류 후, 조회수는 단순 합을, 게시글수와 추천수는 평균낸 값을 사용하였다. 또한 우리가 예측하고자 하는 주간 순위는 가온차트에서 뽑은 1~100위 까지의 순위를 10개의 그룹으로 나누어 만들었다. 즉 1그룹은 1위~10위를, 2그룹은 11위~20위를, 10그룹은 91위~100위를 의미한다.
+이상 7개의 사이트의 정보 중 **2018년 4월 이후**의 데이터를 크롤링하였다. 해당 일을 기준일로 한 이유는 유튜브 데이터가 그 시점 부터 제공되었기 때문이다. 
 
+다양한 사이트를 통해 얻은 데이터를 **기간**(주를 단위로 매주 일요일부터 토요일까지), **곡명**, **가수명**를 key로 합쳤다. 그러기 위해 각각 알맞게 전처리를 실시하였다. 예를 들어 DC데이터의 경우 갤럴리명(가수명)별로 주간 기준에 따라 분류 후, 조회수는 단순 합을, 게시글수와 추천수는 평균낸 값을 사용하였다. 
 
+또한 우리가 예측하고자 하는 *주간 순위*는 가온차트에서 뽑은 1~100위 까지의 순위를 10개의 그룹으로 나누어 만들었다. 즉 1그룹은 1위~10위를, 2그룹은 11위~20위를, 10그룹은 91위~100위를 의미한다.
+ 
+   
+ 
 이후 예측의 정확도를 높이기 위해 2가지 변수를 추가하였다. 먼저, *이전 곡 순위*는 해당 가수명에 따른 이전의 곡 순위중 가장 높은 순위를 구했다. 그리고 *계절변수*는 각 노래가 음원차트에 올라왔을 때의그 시점의 계절을 의미한다. 아래는 우리가 모형에 상용하고자 하는 데이터들의 변수 정보를 정리한 표이다.
 
+ 
+ 
 | 변수명 | 변수의 의미 | 출처 |
 | :----: | :---------- | :--- |
-|rank_g|ㅇ|ㄹㄹ|
-
-rank_g
-you_rank_g
-previous_ranking
-genre
-season
-sex
-song_type
-active_type
-runtime
-top_freq
-gg_score
-nv_score
-total_view
-season_genre_score
-pd_score
-
-dc_total_numb
-dc_mean_reccomend
-dc_mean_views
-
-drama_view
+|rank_g|10구간화한 곡 순위|가온차트|
+|you_rank_g|||
+|previous_ranking|신곡의 경우 이전 곡의 최고순위, 기존에 있는 경우 전주차 순위|파생변수|
+|genre|노래 장르|지니|
+|season|계절|파생변수|
+|season_genre_score|장르별 계절간 추이로 genre와 season??|파생변수|
+|sex|가수 성별|지니|
+|song_type|음악종류|지니|
+|active_type|||
+|runtime|||
+|top_freq|||
+|gg_score|가수별 주간 구글 트렌드|구글 트렌드|
+|nv_score|가수별 주간 네이버 트렌드|네이버 데이터랩|
+|total_view|||
+|pd_score|||
+|dc_total_numb|가수별 주간 게시물 총수|DC 갤러리|
+|dc_mean_reccomend|가수별 주간 평균 추천수|DC 갤러리|
+|dc_mean_views|가수별 주간 평균 조회수|DC 갤러리|
+|drama_view|OST곡일 경우 해당프로그램 시청률|Nielsen코리아|
 
 
-아래의 테이블은 scale 전 합친 데이터이다.
 
-```{r ,eval=F}
-data = readr::read_csv(file="csv 주소")
-data %>%
-  DT::datatable()
+아래의 테이블은 하나로 합치고 scale 전의 raw 데이터이다. 검색을 통해 그 값들을 확인해 볼 수 있다. 
+
+
+```{r ,echo=F, message=F, warning=F}
+data = readr::read_csv(file="https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/raw_model_data.csv")
+DT::datatable(data, rownames = F, extensions='Buttons',
+              options=list(dom='Bfrtip',buttons=c(I('colvis'),'copy', 'csv', 'excel', 'pdf', 'print'))
+              )
 ```
+
+
 
 # Process of Data preprocessing & EDA
 
-• EDA
-• Mean max scaling
-• Log transformation
+EDA
+
+Mean max scaling
+
+Log transformation
 
 # Modeling
 
+1. Logistic regression
 
-• Logistic regression
-• Random forest
-• XG boost
-• Cat boost - 범주형 변수 많아서
+1. Random forest
 
+1. XG boost
+
+1. Cat boost
+
+범주형 변수 많아서
 Grid Search를 통해서 최적의 Hyper Parameter 탐색
 
 
