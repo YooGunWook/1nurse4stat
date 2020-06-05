@@ -1,8 +1,9 @@
 tabItem_est<-tabItem('tab_est',
                      
                      fluidPage(
-                       
-                       title = 'Ranking Estimation',
+                       chooseSliderSkin('Nice'),
+                       #setSliderColor(rep('Green',10),c(1:10)),
+                       titlePanel('Ranking Estimation'),
                        
                        column(6,
                               
@@ -57,7 +58,7 @@ tabItem_est<-tabItem('tab_est',
                                     h3("Let's estimate the ranking of the song",align='center'),
                                     h3('Enter variables and press Estimate button below',align='center'),
                                     br(),
-                                    column(2,offset=5,actionButton('est','Estimate')),
+                                    column(12,align='center',actionButton('est','Estimate')),
                                     br(),
                                     br(),
                                     br(),
