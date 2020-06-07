@@ -1,0 +1,166 @@
+---
+title: "[음원 데이터를 활용한 주간음원순위 예측](https://github.com/YooGunWook/1nurse4stat)"
+subtitle: "[2020-01 데이터사이언스입문 프로젝트](https://statkclee.github.io/ds-intro-2020/)"
+author: 
+    name: "사응일간 ([강동원](https://github.com/dw3624), [백원희](https://github.com/Wonhee-baek), [오태환](https://github.com/dhxoghks95), [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa))"
+date: '최종수정일 : `r Sys.Date()`'
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: hide
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction of Project
+
+2019년 발표된 문화체육관광부의 자료에 따르면 음악 산업 시장은 2016년부터 2018년까지 꾸준하게 매출액이 증가하고 있다. 실제로 음원 시장에서 다양한 부가 가치가 창출 되고 '해외 진출에 따른 발전 가능성도 커질 것으로'(추승엽 외,2016) 기대된다. 성장하는 음원시장의 대표적인 지표로 음원 순위가 주목되고 있다. 따라서 성장하는 음원시장의 주표지표인 음원 순위를 예측하는 것만으로도 상당한 유의미한 정보가 될 것이다.
+
+추가적으로 이러한 지표를 이용하기 위해 소위 ['음원 사재기'](https://namu.wiki/w/%EC%9D%8C%EC%9B%90%20%EC%82%AC%EC%9E%AC%EA%B8%B0)로 불리는 논란이 지속되고 있다. 따라서 우리는 기존의 음원 데이터를 바탕으로 음원순위를 예측모형을 만들고, 예측 모형에 크게 벗어나는 결과가 나오다면, 음원 사재기와 같은 음원 시장 혼란 요인을 찾을 수 있을 것이다. 따라서 우리의 목표는 다음이다.
+
+<br>
+<center> **음원 데이터를 활용한 주간음원순위 예측** </center>
+<br>
+
+## 크롤링
+
+음원 시장은 시대의 특성이 반영되며 기존의 음반 산업과 다르게 '다양한 변수에 의해 영향을 받는 시장'(추승엽 외, 2016)으로 변화 하고 있다. 특히 변화하는 트랜드에 따라 '음원 시장은 유투브, SNS, 인터넷 사이트 등 다양한 플랫폼의 영향이 커지고'(김가연 외, 2018) 있다. 따라서 우리는 선행논문들을 참고하여 다음의 사이트에서 제공되는 데이터를 활용해 주간음원순위를 예측해 보고자 한다.
+
+- [가온차트](http://www.gaonchart.co.kr/main/section/chart/online.gaon?nationGbn=T&serviceGbn=ALL) : 주간 가온차트 순위
+
+- [지니](https://genie.co.kr/chart/top200) : 곡명, 가수명에 따른 곡 정보(장르, ost유무, 가수 성별, 등)
+
+- [유튜브 Music Charts & Insights](https://charts.youtube.com/?hl=ko) : 주간 순위권 뮤직비디오 조회수
+
+- [DC갤러리 연애/방송](https://enter.dcinside.com/) : 가수명에 따른 갤러리별 조회수, 게시글수, 추천수
+
+- [구글 트렌드](https://trends.google.co.kr/trends/?geo=KR) : 가수명에 따른 구글 트렌드
+
+- [네이버 데이터랩](https://datalab.naver.com/) : 가수명에 따른 네이버 트렌드
+
+- [Nielsen코리아](https://www.nielsenkorea.co.kr/tv_terrestrial_day.asp?menu=Tit_1&sub_menu=1_1&area=01) : OST 프로그램에 따른 지상파, 종합편성, 케이블 일일 순위 데이터 
+
+이상 7개의 사이트의 정보 중 **2018년 4월 이후**의 데이터를 크롤링하였다. 해당 일을 기준일로 한 이유는 유튜브 데이터가 그 시점 부터 제공되었기 때문이다. 
+
+## 사용한 변수
+
+다양한 사이트를 통해 얻은 데이터를 **기간**(주를 단위로 매주 일요일부터 토요일까지), **곡명**, **가수명**를 key로 합쳤다. 그러기 위해 각각 알맞게 전처리를 실시하였다. 예를 들어 DC데이터의 경우 갤럴리명(가수명)별로 주간 기준에 따라 분류 후, 조회수는 단순 합을, 게시글수와 추천수는 평균낸 값을 사용하였다. 
+
+또한 우리가 예측하고자 하는 *주간 순위*는 가온차트에서 뽑은 1~100위 까지의 순위를 10개의 그룹으로 나누어 만들었다. 즉 1그룹은 1위~10위를, 2그룹은 11위~20위를, 10그룹은 91위~100위를 의미한다.
+ 
+ 
+이후 예측의 정확도를 높이기 위해 파생변수를 만들었다. 먼저, *이전 곡 순위*는 해당 가수명에 따른 이전의 곡 순위중 가장 높은 순위를 구했다. 그리고 *계절변수*는 각 노래가 음원차트에 올라왔을 때의그 시점의 계절을 의미한다.
+
+```{r , message=F,warning=F}     
+sge = readr::read_csv('https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/eda_data_season_genre.csv')
+plotly::plot_ly(sge, x = ~season, y = ~ seasonal_mean, color = ~genre, type = "scatter", mode = "lines+markers")
+```
+
+또한 위의 그래프를 보면 계절에 따라 장르별 평균 순위가 다른 것을 알 수 있다. 따라서 우리는 *계졀별 장르별 평균을 반영한 파생변수*를 만들었다.
+
+
+
+아래는 우리가 모형에 상용하고자 하는 데이터들의 변수 정보를 정리한 표이다. 
+ 
+| 변수명 | 변수의 의미 | 출처 |
+| :----: | :---------- | :--- |
+|rank_g|10구간화한 곡 순위|가온차트|
+|genre|노래 장르|지니|
+|sex|가수 성별|지니|
+|song_type|음악종류|지니|
+|active_type|가수유형 (예 : 그룹, 솔로)|지니|
+|runtime|음악 재생 시간 (단위 : 초)|지니|
+|you_rank_g|10구간화한 유튜브 순위|유튜브|
+|total_view|총 유튜브 시청수|유튜브|
+|gg_score|가수별 주간 구글 트렌드 지수|구글 트렌드|
+|nv_score|가수별 주간 네이버 트렌드 지수|네이버 데이터랩|
+|pd_score|소속사 네이버 트렌드 지수|네이버 데이터랩|
+|dc_total_numb|가수별 주간 게시물 총수|DC 갤러리|
+|dc_mean_reccomend|가수별 주간 평균 추천수|DC 갤러리|
+|dc_mean_views|가수별 주간 평균 조회수|DC 갤러리|
+|drama_view|OST곡일 경우 해당프로그램 시청률|Nielsen코리아|
+|top_freq|100위 안에 가수가 얼마나 많이 차트에 곡을 올렸는지 4분위수|파생변수|
+|title_song|각 주차별 동일가수의 곡 중 가장 높은 순위가 True, 나머지가 False|파생변수|
+|previous_ranking|신곡의 경우 이전 곡의 최고순위, 기존에 있는 경우 전주차 순위|파생변수|
+|season|계절|파생변수|
+|season_genre_score|(장르&계절별 평균rank_g - 장르별 평균rank_g)/(장르별 평균rank_g)$ |파생변수|
+
+
+
+아래의 테이블은 하나로 합치고 scale 전의 raw 데이터이다. 검색을 통해 그 값들을 확인해 볼 수 있다. 
+
+
+```{r , message=F, warning=F}
+data = readr::read_csv(file="https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/raw_model_data.csv")
+DT::datatable(data, rownames = F, extensions='Buttons',
+              options=list(dom='Bfrtip',buttons=c(I('colvis'),'copy', 'csv', 'excel', 'pdf', 'print'))
+              )
+```
+
+# EDA
+
+모형을 분석하기 전 EDA를 실시하였다.
+
+
+# Process of Data preprocessing
+
+각각의 변수별로 다른 scale인 것을 볼 수 있다. 따라서 분석을 위해 변수를 동일한 scale로 만들어 주기 위해  Mean max scaling을 실시 하였다.
+
+
+또한 Log transformation를 실시하였다. 그 결가 아래의 그래프처럼 각 변수들이 정규화 된 것을 볼 수 있다.
+
+
+# Modeling
+
+우리는 총 4가지의 모델을 사용하였고 그 중 가장 최적의 모델을 찾아 우리의 최종 모형을 사용하고자 하였다. 4가지 모델로 Logistic regression, Random forest. XG boost, Cat boost를 사용하였다. 모델 비교의 지표로 F1-score를 사용하였다.
+
+
+## Logistic regression
+
+ordinal 변수이기에 cumulative logistic regression을 사용하는 것이 적절하나, 다른 모델은 random forest와 boost 기법을 사용하고, 우리의 목표도 순위 예측이기에 설명력보다는 예측력 모델인 generalized logistic regression을 실시하였다. 그 결과는 다음과 같다.
+
+## Random forest
+
+
+## XG boost
+
+
+## Cat boost
+
+
+범주형 변수 많아서 Grid Search를 통해서 최적의 Hyper Parameter 탐색
+
+
+# Result
+
+이상의 결과에서 Cat boost를 사용했을 때 가장 높은 F1-score를 보였다. 이 모형을 우리의 최종 예측모형으로 정하고,`Shiny` 패키지를 이용해 반응형 웹을 구현하였다. 아래의 주소를 통해 들어가 직접 예측을 해볼 수 있다.
+
+
+
+
+
+# References
+- [곽아영 (2017) 데이터 분석을 통한 온라인 음원차트의 어뷰징 영향요인 탐색](http://www.riss.kr/search/detail/DetailView.do?p_mat_type=be54d9b8bc7cdb09&control_no=96155f174d1eb757ffe0bdc3ef48d419&outLink=K)
+
+- [정종범 (2019) 디지털 음원 시장의 현황 분석](http://www.riss.kr/search/detail/DetailView.do?p_mat_type=be54d9b8bc7cdb09&control_no=b8a6efe3d585b804ffe0bdc3ef48d419)
+
+- [추승엽, 현창민, 임성준 (2016) 디지털 음원산업의 흥행요인.Korea Business Review,20(4),231-254.](http://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07060997)
+
+- [김가연, 김명준 (2018) 소셜 데이터 분석을 통한 음원 흥행 예측 지표 연구. 한국디지털콘텐츠학회 논문지, 19(6), 1105-1114](http://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07478981)
+
+- [Chon, Song Hui (2006) Predicting success from music sales data: a statistical and adaptive approach](https://www.researchgate.net/publication/228427644_Predicting_success_from_music_sales_data_a_statistical_and_adaptive_approach)
+
+- [하정철, 강동훈, 박재모, 길준민 (2016) R 기반의 빅데이터 기술을 활용한 뉴스기사와 음원차트의 상관관계 분석](https://doi.org/10.3745/PKIPS.y2016m10a.636)
+
+- [문화체육관광부 (2019) 콘텐츠산업 통계조사](http://www.kocca.kr/cop/bbs/view/B0158948/1842396.do;KCSESSIONID=Y8v0pcCbZ2Z01361v8NNvPJ2WVK4y3QKyLDDYwvzr2yykJJqyyQ6!1977949012!702860807?searchCnd=&searchWrd=&cateTp1=&cateTp2=&useAt=&menuNo=203778&categorys=0&subcate=0&cateCode=&type=&instNo=0&questionTp=&uf_Setting=&recovery=&option1=&option2=&year=&categoryCOM062=&categoryCOM063=&categoryCOM208=&categoryInst=&morePage=&delCode=0&qtp=&pageIndex=1)
+
+- [Jiyun Chung, Myoung Jun Kim (2018) Music recommendation model by analysis of listener's musical preference factor of K-pop](https://dl.acm.org/doi/10.1145/3209914.3209932)
+
