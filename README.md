@@ -2,12 +2,12 @@
 [강동원](https://github.com/dw3624), [백원희](https://github.com/Wonhee-baek), [오태환](https://github.com/dhxoghks95), [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa)
 <br>
 
-## 프로젝트 주제: 음원 데이터를 활용한 주간음원순위 예측 
+## 프로젝트 주제
+음원 데이터를 활용한 주간음원순위 예측 
 <br>
 
 ## 프로젝트 목표
-- 주간음원순위 예측을 통한 음원 흥행 여부 판단 
-- 주간음원순위 예측을 통해 음원의 사재기 여부 판단 
+주간음원순위 예측을 통한 음원 흥행 여부 판단 및 음원의 사재기 여부 판단 
 <br>
 
 
