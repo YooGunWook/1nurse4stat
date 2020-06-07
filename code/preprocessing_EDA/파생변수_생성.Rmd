@@ -16,7 +16,7 @@ classoption: a4paper
 ```{r}
 library(tidyverse)
 
-data = read_csv("C:/Users/dhxog/yonsei/dsintro/new_merge_data.csv")
+data = read.csv("https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/title_song%EC%B6%94%EA%B0%80.csv")
 summary(data)
 ```
 
@@ -74,7 +74,6 @@ for(i in 1:nrow(data)){
   data$season[i] = season(data$month[i])
 }
 
-write.csv(data, "firstmodeldata.csv")
 ```
 
 ### 3,4,5월은 봄, 6,7,8월은 여름, 9,10,11월은 가을, 12,1,2월은 겨울로 하는 칼럼을 만들었다.
@@ -91,9 +90,7 @@ library(plotly)
 library(GGally)
 library(tidymodels)
 
-data = read_csv("C:/Users/dhxog/yonsei/dsintro/first_model_glm.csv")
 
-summary(data)
 ```
 
 
@@ -146,18 +143,17 @@ data = merge(data, season_genre_score_df, by = c("genre", "season"))
 
 ```{r}
 library(lubridate)
+data$주차 = as.Date(data$주차)
 
-data$ymd = data %>% select(name, year, month, day) %>% mutate(ymd = paste0(20,year,"-", month, "-", day)) %>% select(ymd) %>%unlist() %>% as.Date()
-
-data = data %>% group_by(name) %>% mutate(new_song = ymd == min(ymd))
-data = data %>% group_by(name) %>% mutate(previous_song = ymd != min(ymd))
+data = data %>% group_by(name) %>% mutate(new_song = (주차 == min(주차)))
+data = data %>% group_by(name) %>% mutate(previous_song = (주차 != min(주차)))
 ```
 
 ### 신곡과 기존 곡으로 나누자
 ```{r}
-data = data %>% group_by(name) %>% arrange(ymd) %>% mutate(previous_rank = lag(rank_g,1)) 
+data = data %>% group_by(name) %>% arrange(주차) %>% mutate(previous_rank = lag(rank_g,1)) 
 
-previous_song_name = data %>% select(artist, name, ymd) %>%  group_by(name)%>%arrange(ymd) %>% ungroup() %>% select(artist, name)  %>% unique() %>% group_by(artist) %>% mutate(previous_song_name = lag(name, 1))
+previous_song_name = data %>% select(artist, name, 주차) %>%  group_by(name)%>%arrange(주차) %>% ungroup() %>% select(artist, name)  %>% unique() %>% group_by(artist) %>% mutate(previous_song_name = lag(name, 1))
 
 
 data = previous_song_name %>% merge(data, by = c("artist", "name"))
@@ -177,7 +173,7 @@ data = data %>% mutate(previous_ranking = if(new_song == TRUE){previous_ranking 
 ### 신곡의 경우 이전 곡의 최고순위, 기존 차트에 있던 곡의 경우는 전주차 순위를 칼럼으로 만들었다.
 
 ```{r}
-write_csv(data, "파생변수 두 개 추가.csv")
+write_csv(data, "파생변수_최종.csv")
 ```
 
 ### 만들어진 결과물을 저장하자.

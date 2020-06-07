@@ -1,9 +1,35 @@
 library(tidyverse)
 library(tidymodels)
-data = read_csv("new_model_pred_change_dc_drama.csv")
+data = read.csv("C:/Users/dhxog/dsintro/1nurse4stat/data/model_data/파생변수_최종.csv")
+
 summary(data)
 skimr::skim(data)
 
+
+data = data %>% select(artist, name, rank_g, 순위, previous_ranking, genre, season, sex, song_type, active_type, runtime, top_freq, gg_score, nv_score, 조회수, season_genre_score, pd_score, dc_total_numb, dc_mean_reccomend, dc_mean_views, view, title_song, 주차)
+
+
+data = rename(data,  "you_rank" = "순위")
+data = rename(data, "drama_view" = "view")
+data = rename(data, "total_view" = "조회수")
+data = rename(data, "week" = "주차")
+
+data = data %>% mutate(you_rank_g=case_when(1<=you_rank&you_rank<=10~1,
+                                           11<=you_rank&you_rank<=20~2,
+                                           21<=you_rank&you_rank<=30~3,
+                                           31<=you_rank&you_rank<=40~4,
+                                           41<=you_rank&you_rank<=50~5,
+                                           51<=you_rank&you_rank<=60~6,
+                                           61<=you_rank&you_rank<=70~7,
+                                           71<=you_rank&you_rank<=80~8,
+                                           81<=you_rank&you_rank<=90~9,
+                                           TRUE~10))
+
+
+
+data = data %>% select(-you_rank)
+
+write.csv(data, "NA_채우기_전.csv")
 ## Skwed data log transformation
 
 ### 1) nv_score
