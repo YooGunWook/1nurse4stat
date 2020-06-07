@@ -16,7 +16,7 @@ classoption: a4paper
 ```{r}
 library(tidyverse)
 
-data = read.csv("C:/Users/dhxog/yonsei/dsintro/title_song추가.csv")
+data = read.csv("https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/title_song%EC%B6%94%EA%B0%80.csv")
 summary(data)
 ```
 
