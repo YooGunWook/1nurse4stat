@@ -1,0 +1,42 @@
+---
+title: "수록곡 여부"
+author: "오태환"
+date: "`r Sys.Date()`"
+output: 
+  html_document
+fontsize: 10pt
+geometry: margin=1in
+mainfont: NanumGothic
+classoption: a4paper
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+
+data = read.csv("데이터 원본_인코딩수정.csv")
+```
+
+```{r}
+data$year = data %>% transmute(year = paste0(20, year)) %>% unlist() %>% as.numeric()
+
+
+data$주차 = data %>% select(year, month, day)%>% unite(주차 , c(year, month, day), sep = "-") %>% unlist() %>% as.Date()
+
+```
+
+```{r}
+data = data %>% select(artist, 주차, name, rank_g) %>%
+  group_by(artist, 주차) %>% mutate(top = min(rank_g)) %>% ungroup() %>%
+  mutate(title_song = (rank_g == top)) %>% select(artist, 주차, name, title_song) %>%
+  merge(data, by = c('artist', '주차', 'name'))
+  
+```
+
+```{r}
+write_csv(data, "title_song추가.csv")
+```

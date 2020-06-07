@@ -3,20 +3,20 @@ title: "파생변수 생성"
 author: "2015122026오태환"
 date: '2020 5 26 '
 output: 
-  pdf_document:
-    fig_caption: true
-    latex_engine: xelatex
+  html_document
 fontsize: 10pt
 geometry: margin=1in
 mainfont: NanumGothic
 classoption: a4paper
 ---
 
+# EDA 1
+
 # 1) Import Data
 ```{r}
 library(tidyverse)
 
-data = read_csv("new_merge_data.csv")
+data = read_csv("C:/Users/dhxog/yonsei/dsintro/new_merge_data.csv")
 summary(data)
 ```
 
@@ -78,3 +78,106 @@ write.csv(data, "firstmodeldata.csv")
 ```
 
 ### 3,4,5월은 봄, 6,7,8월은 여름, 9,10,11월은 가을, 12,1,2월은 겨울로 하는 칼럼을 만들었다.
+
+# 이제 만들어진 계절변수로 다른 파생변수를 만들어보도록 하겠다.
+
+# EDA 2
+
+## 0) Import Data
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(GGally)
+library(tidymodels)
+
+data = read_csv("C:/Users/dhxog/yonsei/dsintro/first_model_glm.csv")
+
+summary(data)
+```
+
+
+
+## 1) 파생변수 생성
+
+### 1-1) 장르와 계절간에 관계가 있는지 보고싶다.
+
+```{r}
+season_genre_rank = data %>% select(genre,season, rank_g)
+
+temp = season_genre_rank %>% select(genre) %>% unique() %>% as.vector()
+
+
+
+genre_name = c()
+
+for(i in 1:16){
+  genre_name[i] <- as.character(temp[i,])
+}
+
+
+
+
+sge = list()
+for(i in 1:16){
+
+sge <- cbind(genre = matrix(genre_name[i], 4, 1), season_genre_rank %>% filter(genre == genre_name[i]) %>% group_by(season)%>% summarise(seasonal_mean = mean(rank_g))) %>% merge(season_genre_rank %>% group_by(genre) %>% summarise(genre_mean = mean(rank_g)), by = "genre") %>% rbind(sge)
+}
+
+sge = unique(sge)
+```
+
+## 동적 그래프를 그려 확인해보겠다.(값이 낮을 수록 높은 평균 순위이다.)
+```{r}     
+plot_ly(sge, x = ~season, y = ~ seasonal_mean, color = ~genre, type = "scatter", mode = "lines+markers")
+```
+
+## 장르별로 계절간  추이가 있는 것을 확인하였다. 
+
+### 1-1-1) 장르별 계절간 추이를 데이터에 반영하고 싶다.
+```{r}
+
+season_genre_score_df = sge %>% mutate(season_genre_score = (seasonal_mean - genre_mean) / genre_mean) %>% select(genre, season, season_genre_score)
+
+data = merge(data, season_genre_score_df, by = c("genre", "season"))
+```
+
+## 1-2) 신곡의 경우는 이전 곡의 최고 랭킹, 기존 곡의 경우는 직전 주 랭킹을 사용한 변수를 만들고 싶다.
+
+```{r}
+library(lubridate)
+
+data$ymd = data %>% select(name, year, month, day) %>% mutate(ymd = paste0(20,year,"-", month, "-", day)) %>% select(ymd) %>%unlist() %>% as.Date()
+
+data = data %>% group_by(name) %>% mutate(new_song = ymd == min(ymd))
+data = data %>% group_by(name) %>% mutate(previous_song = ymd != min(ymd))
+```
+
+### 신곡과 기존 곡으로 나누자
+```{r}
+data = data %>% group_by(name) %>% arrange(ymd) %>% mutate(previous_rank = lag(rank_g,1)) 
+
+previous_song_name = data %>% select(artist, name, ymd) %>%  group_by(name)%>%arrange(ymd) %>% ungroup() %>% select(artist, name)  %>% unique() %>% group_by(artist) %>% mutate(previous_song_name = lag(name, 1))
+
+
+data = previous_song_name %>% merge(data, by = c("artist", "name"))
+```
+### 신곡의 경우에 활용하기 위해 그 가수의 이전 곡 이름 칼럼을 만든다.
+
+```{r}
+data = data %>% select(artist, name, previous_song_name, rank_g) %>% group_by(name) %>% mutate(top_rank = min(rank_g)) %>% ungroup() %>% select(-rank_g) %>% unique() %>% group_by(artist) %>% mutate(previous_song_rank = lag(top_rank, 1)) %>% ungroup() %>% merge(data, by = c("artist", "name", "previous_song_name")) %>% 
+  select(-c("top_rank", "previous_song_name"))
+```
+
+### 이전 곡의 최고 순위 칼럼을 만들었다.
+
+```{r}
+data = data %>% mutate(previous_ranking = if(new_song == TRUE){previous_ranking = previous_song_rank.x} else {previous_ranking = previous_rank}) %>% select(-c("previous_song_rank.x", "previous_song_rank.y", "previous_song", "new_song", "previous_rank"))
+```
+### 신곡의 경우 이전 곡의 최고순위, 기존 차트에 있던 곡의 경우는 전주차 순위를 칼럼으로 만들었다.
+
+```{r}
+write_csv(data, "파생변수 두 개 추가.csv")
+```
+
+### 만들어진 결과물을 저장하자.
