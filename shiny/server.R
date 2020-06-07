@@ -9,12 +9,8 @@ shinyServer(function(input, output){
   #Functions/Variables for each session
   
   #Import Files
-  source('server_info.R',local=TRUE)
-  
-  source('server_mv.R',local=TRUE)
-  source('server_mcraw.R',local=TRUE)
-  source('server_mstat.R',local=TRUE)
-  
+  source('server_est.R',local=TRUE)
+  source('server_est2.R',local=TRUE)
   
   
 })

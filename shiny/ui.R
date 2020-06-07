@@ -1,52 +1,39 @@
 library(shiny)
 library(shinydashboard)
-source('ui_info.R',local=TRUE)
-source('ui_mv.R',local=TRUE)
-source('ui_mcraw.R',local=TRUE)
-source('ui_mstat.R',local=TRUE)
-source('ui_res.R',local=TRUE)
-#source('ui_feat.R',local=TRUE)
-#source('ui_cat.R',local=TRUE)
-#source('ui_xg.R',local=TRUE)
-#source('ui_logi.R',local=TRUE)
-#source('ui_forest.R',local=TRUE)
+library(shinyWidgets)
+library(plotly)
+source('ui_est.R',local=TRUE) #rank estimate
+source('ui_est2.R',local=TRUE) #rank fluctuation
 
 
-dashboardPage(
+
+dashboardPage(#skin='green',
   dashboardHeader(title='1nurse4stat'),
+  
   dashboardSidebar(
     sidebarMenu(
-      menuItem('Information',icon=icon('info'),tabName='tab_info'),
-      menuItem('Method',
-               menuSubItem('Variable',tabName='tab_mv'),
-               menuSubItem('Data Crawling',tabName='tab_mcraw'),
-               menuSubItem('Statistical Method',tabName='tab_mstat'))#,
-#      menuItem('Results-EDA',tabName='tab_res')
-#      menuItem('Results-Models',icon=icon('line-chart'),
-#               menuSubItem('Feature Importance',tabName='tab_feat'),
-#               menuSubItem('Cat Boost',tabName='tab_cat'),
-#               menuSubItem('Xg Boost',tabName='tab_xg'),
-#               menuSubItem('Logistic Regression',tabName='tab_logi'),
-#               menuSubItem('Random Forest',tabName='tab_forest'))
-    )
+      menuItem('Ranking Estimation',icon=icon('info'),tabName='tab_est'),
+      menuItem('Ranking Fluctuation',tabName='tab_est2')
+      )
   ),
+
   dashboardBody(
+#    tags$style(HTML("
+#.box.box-solid.box-primary>.box-header{color:#fff#;background:#666666}
+#
+#.box.box-solid.box-primary{
+#border-bottom-color:#666666;
+#border-left-color:#666666;
+#border-right-color:#666666;
+#border-top-color:#666666;
+#}")),
+    
+    
     tabItems(
-      tabItem_info,
-      
-      tabItem_mv,
-      tabItem_mcraw,
-      tabItem_mstat#,
-      
-#      tabItem_res
-#      tabItem_feat,
-#      tabItem_cat,
-#      tabItem_xg,
-#      tabItem_logi,
-#      tabItem_forest
-    )
+      tabItem_est,
+      tabItem_est2
+      )
   )
 )
 
-
-#shiny::runApp()
+#콘솔창에서 shiny::runApp() 실행
