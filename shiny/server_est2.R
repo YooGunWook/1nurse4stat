@@ -28,3 +28,8 @@ output$plot<-renderPlotly({
   
   plot_ly(temp, x = ~Day, y = ~ rank_g,  type = "scatter", mode = "lines+markers") %>% layout(plot_bgcolor = 'black', title = paste0(singer, "-", song, "-", week), yaxis = list(range = c(10,0), title = "Rank Group", dtick = 1))
 })
+
+
+output$explain_est2<-renderText({
+  'This graph shows the Ranking Fluctuation of selected song.'
+})

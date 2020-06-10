@@ -4,15 +4,14 @@ library(shinyWidgets)
 library(plotly)
 source('ui_est.R',local=TRUE) #rank estimate
 source('ui_est2.R',local=TRUE) #rank fluctuation
-
-
+source('ui_est3.R',local=TRUE) #rank fluctuation
 
 dashboardPage(#skin='green',
   dashboardHeader(title='1nurse4stat'),
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem('Ranking Estimation',icon=icon('info'),tabName='tab_est'),
+      menuItem('Ranking Estimation',icon=icon('info'),tabName='tab_est3'),
       menuItem('Ranking Fluctuation',tabName='tab_est2')
       )
   ),
@@ -30,7 +29,7 @@ dashboardPage(#skin='green',
     
     
     tabItems(
-      tabItem_est,
+      tabItem_est3,
       tabItem_est2
       )
   )

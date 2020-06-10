@@ -21,8 +21,16 @@ tabItem_est2<-tabItem('tab_est2',
                           ),
 
                           mainPanel(
+                            fluidRow(
+                              box(width=12,
+                              solidHeader=F,status='primary',
                             plotlyOutput('plot')
-                            
+                            )),
+                            fluidRow(
+                              box(width=12,
+                                  solidHeader=F,status='primary',
+                                 h4(textOutput('explain_est2')),align='center')
+                            )
                           )
                         )
   )
