@@ -2,7 +2,6 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 library(plotly)
-source('ui_est.R',local=TRUE) #rank estimate
 source('ui_est2.R',local=TRUE) #rank fluctuation
 source('ui_est3.R',local=TRUE) #rank fluctuation
 
