@@ -79,7 +79,7 @@ normalize <- function(x)
 
 numeric_data = data %>% select(runtime, top_freq, gg_score, nv_score, total_view, season_genre_score, pd_score, dc_total_numb, dc_mean_reccomend, dc_mean_views, drama_view)
 
-cat_data = data %>% select(rank_g, you_rank_g, previous_ranking, genre, season, sex, song_type, active_type, title_song)
+cat_data = data %>% select(rank_g, you_rank_g, previous_ranking, genre, season, sex, song_type, active_type, title_song, week, artist)
 
 for(i in 1:(ncol(numeric_data))){
   numeric_data[,i] = normalize(numeric_data[,i])
