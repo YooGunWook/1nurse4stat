@@ -11,7 +11,7 @@
 <br>
 
 ## 프로젝트 사이트
-프로젝트 설명 : [https://YooGunWook.github.io/1nurse4stat/docs/final.html](https://YooGunWook.github.io/1nurse4stat/docs/final.html) 
+프로젝트 설명 : [https://YooGunWook.github.io/1nurse4stat/final.html](https://YooGunWook.github.io/1nurse4stat/final.html) 
 
 프로젝트 구현 : 제작중
 <br>
