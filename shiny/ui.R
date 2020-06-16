@@ -2,34 +2,32 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 library(plotly)
+library(DT)
 source('ui_est.R',local=TRUE) #rank estimate
 source('ui_est2.R',local=TRUE) #rank fluctuation
+source('ui_est1.R',local=TRUE) #datatable
 
-dashboardPage(#skin='green',
+
+
+dashboardPage(#skin='',
   dashboardHeader(title='1nurse4stat'),
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem('Ranking Estimation',icon=icon('info'),tabName='tab_est'),
-      menuItem('Ranking Fluctuation',tabName='tab_est2')
-      )
+      menuItem('Ranking Fluctuation',icon=icon('chart-line',lib='font-awesome'),tabName='tab_est2'),
+      menuItem('Ranking Estimation',icon=icon('music',lib='font-awesome'),tabName='tab_est'),
+      menuItem('DataTable',icon=icon('table',lib='font-awesome'),tabName='tab_est1')
+
+
+            )
   ),
 
   dashboardBody(
-#    tags$style(HTML("
-#.box.box-solid.box-primary>.box-header{color:#fff#;background:#666666}
-#
-#.box.box-solid.box-primary{
-#border-bottom-color:#666666;
-#border-left-color:#666666;
-#border-right-color:#666666;
-#border-top-color:#666666;
-#}")),
-    
     
     tabItems(
-      tabItem_est,
       tabItem_est2
+      ,tabItem_est
+      ,tabItem_est1
       )
   )
 )
