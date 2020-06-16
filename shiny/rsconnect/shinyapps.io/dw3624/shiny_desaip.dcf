@@ -1,0 +1,10 @@
+name: shiny_desaip
+title:
+username:
+account: dw3624
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2461465
+bundleId: 3277599
+url: https://dw3624.shinyapps.io/shiny_desaip/
+when: 1592319319.01528

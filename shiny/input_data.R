@@ -1,28 +1,25 @@
 library(tidyverse)
 library(plotly)
 
-data = read_csv("https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/%EC%B5%9C%EC%A2%85%20%EA%B2%B0%EA%B3%BC_log_Scale_%EA%B7%B8%EB%9E%98%ED%94%84.csv")
+data = read_csv("data/final_result_graph.csv")
 data = data %>% select(-X1)
-
-
-
-name = read.csv("C:/Users/dhxog/dsintro/1nurse4stat/data/model_data/파생변수_최종.csv")
-
+name = read.csv("data/paseng_final.csv")
 
 data = data.frame(data, name = name %>% select(name))
+
 
 library(lubridate)
 data$week = ymd(data$week)
 
-singer = readline("가수명을 입력하시오 : ")
+singer = DEAN
 
 data %>% select(artist, name) %>% filter(artist == singer) %>% unique()
 
-song = readline("곡명을 입력하시오 : ")
+song = 'instagram'
 
 data %>% select(artist, name, week ) %>% filter(artist == singer & name == song) %>% arrange(week)
 
-myweek = readline(("주차를 입력하시오 : "))
+myweek = '2018-07-01'
 
 
 temp = data %>% filter(artist ==singer & name == song & week <= myweek & week >= (as.Date(myweek) - 7*4)) %>% select(artist, name, week, rank_g, rank_g_pred) %>% arrange(week)
@@ -33,5 +30,21 @@ plot_ly(temp, x = ~week, y = ~ rank_g,  type = "scatter", mode = "lines+markers"
 
 diff_data = data %>% mutate(diff_rank = rank_g - rank_g_pred)
 
-diff_data %>% filter(diff_rank < -5) %>% View()
+diff_data %>% filter(diff_rank < -5) %>% select(artist,name,week,diff_rank)%>%View()
 
+
+diff_data = data %>% mutate(diff_rank = rank_g - rank_g_pred)
+temp2 = diff_data %>% filter(artist ==singer & name == song & week == (as.Date(myweek))) %>% select(artist, name, week, rank_g, rank_g_pred,diff_rank) %>% arrange(diff_rank)
+temp2
+
+
+
+h2('')
+DT::dataTableOutput('diffrank')
+
+
+output$diffrank<-DT::renderDatatable({
+  diff_data %>% filter(diff_rank < -5) %>% select(artist,name,week,diff_rank)
+})
+
+install.packages('DT')
