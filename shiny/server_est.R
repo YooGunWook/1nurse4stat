@@ -12,7 +12,7 @@ np = import('numpy')
 joblib = import('joblib')
 catboost = import('catboost')
 
-model = joblib$load('C:/Users/user/Desktop/cpu_version2.pkl')
+model = joblib$load('model/cpu_version2.pkl')
 
 
 arraylist<-reactive(
