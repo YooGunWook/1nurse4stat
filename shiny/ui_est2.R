@@ -21,6 +21,11 @@ tabItem_est2<-tabItem('tab_est2',
                           ),
 
                           mainPanel(
+                            tabsetPanel(
+                              tabPanel('Table',
+                                       DT::dataTableOutput('diffrank'),
+                                       p('These are the datas that the difference between Real and Estimated rank group is bigger than -5')),
+                              tabPanel('Graph',
                             fluidRow(
                               box(width=12,
                               solidHeader=F,status='primary',
@@ -30,8 +35,11 @@ tabItem_est2<-tabItem('tab_est2',
                               box(width=12,
                                   solidHeader=F,status='primary',
                                  h4(textOutput('explain_est2')),align='center')
+                            ),
+                            fluidRow(
+                              valueBoxOutput('diffbox'))
                             )
                           )
                         )
   )
-)
+))
