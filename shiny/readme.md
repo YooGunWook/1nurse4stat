@@ -1,18 +1,27 @@
 # Shiny Dashboard
- Rank Group은 각각 10등씩 나눈 등수로, 1위부터 9위는 Group0, 10위부터 19위는 Group1, 100위 이하는 Group10을 부여.
 
 ## Content
    * Ranking  Fluctuation
- Table : 예측 등수와 실제 등수 그룹 차이가 -5 이상의 곡들을 출력.
- Graph : 선택한 곡의 과거 4주간의 등수 변화 추이와 예측 등수 그룹을 출력.
- Real Rank : 푸른 선으로 표시, 실제 등수 그룹 변화 추이를 나타냄.
- Rank Estimate : 주황 점선으로 표시, 예측 등수 그룹을 나타냄.
+      * Table Tab : artist, name, week, diff_rank를 포함한 datatable
+      * Graph Tab : 특정 곡의 과거 5주간 차트 실제 및 예측 변화 추이를 출력.
+         *  Real Rank : 푸른 선으로 표시, 실제 순위 변화 추이를 출력.
+         *  Rank Estimate : 주황 점선으로 표시, 예측 순위 변화 추이를 출력.
+         *  Value Box : 하단의 5개 valuebox는 각각 과거 5주간의 예측 순위와 실제 순위 차이를 출력 및 평가. 차이가 20 미만의 경우 초록, 20이상 70미만의 경우 주황, 70이상의 경우 빨강.
+
+> singer, title을 순서대로 입력 후 week를 입력, 변화 추이 graph 출력
+> 가수명 혹은 곡명이 불명확한 경우, Table 탭에서 검색 후 입력
+> 해당 주차에 곡이 미발표되는 등의 사유로 순위가 없는 경우, plot에도 표시가 안 되며, valuebox도 출력이 안됨.
+
 
    * Data Table
- 사용한 데이터를 제시. 단 일부 변수는 생략.
-
-
-
-로컬에서 사용할 경우, server.est의 R#2에서 `Anaconda3`환경 하의 `python`경로 변경 후 사용할 것.
-`Anaconda3`환경이 없는 경우 `miniconda`설치여부를 묻는데, 잘 모르면 설치하지 않도록 한다.
-`python`이 없는 경우 본 대쉬보드를 실행하지 못할 가능성이 높다.
+ 사용한 datatable 제시. 가독성을 위해 일부 변수 생략. 
+| 변수명 | 변수의 의미 | 
+| :----: | :---------- | :--- |
+|artist|가수명|
+|name|곡명|
+|title_song|각 주차별 해당 가수 곡 중 최고 순위 여부|
+|week|해당 차트 주|
+|top_freq|100위 안에 가수가 얼마나 많이 차트에 곡을 올렸는지 4분위수|
+|rank|주간 곡 순위|
+|rank_g_pred|주간 곡 예측 순위|
+|diff_rank|주간 곡 실제 순위와 예측 순위의 차이|
