@@ -1,19 +1,15 @@
 # Shiny Dashboard
- Rank Group은 각각 10등씩 나눈 등수로, 1~9위는 Group0, 10~19위는 Group1, 100위 이하는 Group10을 부여.
+ Rank Group은 각각 10등씩 나눈 등수로, 1위부터 9위는 Group0, 10위부터 19위는 Group1, 100위 이하는 Group10을 부여.
 
 ## Content
    * Ranking  Fluctuation
- ⋅⋅⋅Table : 예측 등수와 실제 등수 그룹 차이가 -5 이상의 곡들을 출력.
- ⋅⋅⋅Graph : 선택한 곡의 과거 4주간의 등수 변화 추이와 예측 등수 그룹을 출력.
- ⋅⋅⋅⋅⋅⋅Real Rank : 푸른 선으로 표시, 실제 등수 그룹 변화 추이를 나타냄.
- ⋅⋅⋅⋅⋅⋅Rank Estimate : 주황 점선으로 표시, 예측 등수 그룹을 나타냄.
-
-   * Ranking Estimation
- ⋅⋅⋅모델에 사용된 변수를 모두 조정, 입력하여 등수 그룹을 예측.
- ⋅⋅⋅⋅⋅⋅`reticulate`를 이용하여 `Anaconda3`환경 하 `python`으로 작성한 모델을 사용.
+ Table : 예측 등수와 실제 등수 그룹 차이가 -5 이상의 곡들을 출력.
+ Graph : 선택한 곡의 과거 4주간의 등수 변화 추이와 예측 등수 그룹을 출력.
+ Real Rank : 푸른 선으로 표시, 실제 등수 그룹 변화 추이를 나타냄.
+ Rank Estimate : 주황 점선으로 표시, 예측 등수 그룹을 나타냄.
 
    * Data Table
- ⋅⋅⋅사용한 데이터를 제시. 단 일부 변수는 생략.
+ 사용한 데이터를 제시. 단 일부 변수는 생략.
 
 
 

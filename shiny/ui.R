@@ -1,33 +1,36 @@
 library(shiny)
 library(shinydashboard)
-library(shinyWidgets)
+library(devtools)
 library(plotly)
 library(DT)
-source('ui_est.R',local=TRUE) #rank estimate
-source('ui_est2.R',local=TRUE) #rank fluctuation
-source('ui_est1.R',local=TRUE) #datatable
+library(devtools)
+library(htmltools)
+library(dashboardthemes)
+source('ui_graph1.R',local=TRUE) #rank fluctuation
+source('ui_data.R',local=TRUE) #datatable
 
 
 
-dashboardPage(#skin='',
+dashboardPage(
   dashboardHeader(title='1nurse4stat'),
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem('Ranking Fluctuation',icon=icon('chart-line',lib='font-awesome'),tabName='tab_est2'),
-      menuItem('Ranking Estimation',icon=icon('music',lib='font-awesome'),tabName='tab_est'),
-      menuItem('DataTable',icon=icon('table',lib='font-awesome'),tabName='tab_est1')
+      menuItem('Ranking Fluctuation',icon=icon('chart-line',lib='font-awesome'),tabName='tab_graph1'),
+      menuItem('DataTable',icon=icon('table',lib='font-awesome'),tabName='tab_data')
 
 
             )
   ),
 
   dashboardBody(
+                    
+    shinyDashboardThemes(
+      theme='boe_website'),
     
     tabItems(
-      tabItem_est2
-      ,tabItem_est
-      ,tabItem_est1
+      tabItem_graph1
+      ,tabItem_data
       )
   )
 )
