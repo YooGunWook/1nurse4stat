@@ -16,11 +16,11 @@
    * Data Table
  사용한 datatable 제시. 가독성을 위해 일부 변수 생략. 
 
-artist: 가수명
-name: 곡명
-title_song: 각 주차별 해당 가수 곡 중 최고 순위 여부
-week: 해당 차트 주
-top_freq: 100위 안에 가수가 얼마나 많이 차트에 곡을 올렸는지 4분위수
-rank: 주간 곡 순위
-rank_g_pred: 주간 곡 예측 순위
-diff_rank: 주간 곡 실제 순위와 예측 순위의 차이
+      * artist: 가수명
+      * name: 곡명
+      * title_song: 각 주차별 해당 가수 곡 중 최고 순위 여부
+      * week: 해당 차트 주
+      * top_freq: 100위 안에 가수가 얼마나 많이 차트에 곡을 올렸는지 4분위수
+      * rank: 주간 곡 순위
+      * rank_g_pred: 주간 곡 예측 순위
+      * diff_rank: 주간 곡 실제 순위와 예측 순위의 차이
