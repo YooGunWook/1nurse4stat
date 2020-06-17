@@ -1,0 +1,27 @@
+---
+title: "[음원 데이터를 활용한 주간음원순위 예측](https://github.com/YooGunWook/1nurse4stat)"
+subtitle: "[2020-01 데이터사이언스입문 프로젝트](https://statkclee.github.io/ds-intro-2020/)"
+author: 
+    name: "사응일간 ([강동원](https://github.com/dw3624), [백원희](https://github.com/Wonhee-baek), [오태환](https://github.com/dhxoghks95), [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa))"
+date: '최종수정일 : `r Sys.Date()`'
+output:
+  html_document: 
+    highlight: tango
+    code_folding: hide
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
+
+---
+
+# Raw data table
+
+crawling한 데이터를 하나의 table로 merge한 것이다. scale 전의 raw 데이터를 볼 수 있다. 검색을 통해 그 값들을 확인해 볼 수 있다. 
+
+```{r , message=F, warning=F}
+data = readr::read_csv(file="https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/shiny/data/finalresult_graph_final_5.csv")
+DT::datatable(data, rownames = F, extensions='Buttons',
+              options=list(dom='Bfrtip',buttons=c(I('colvis'),'copy', 'csv', 'excel', 'pdf', 'print'))
+              )
+```
+
