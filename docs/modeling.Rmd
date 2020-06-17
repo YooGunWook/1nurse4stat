@@ -37,9 +37,9 @@ use_condaenv("anaconda3")
 
 이번 프로젝트에서는 1~200위까지 순위를 예측했다. 사용된 test 데이터는 2020년 4월 19일이고, 그 외 데이터들이 train과 validation set이다.
 
-원래 순위 예측과는 다르게 Classification이 아닌 Regression으로 순위를 예측하려고 한다. Regression을 통해 실제 순위와 얼마나 차이 나는지 파악했다. 
+원래 순위 예측과는 다르게 Classification이 아닌 Regression으로 순위를 예측하려고 한다. Regression을 통해 실제 순위와 얼마나 차이 나는지 파악했다. 그리고 Classification의 경우 정확하게 예측하지 않는 이상 예측 평가에서 매우 떨어지기 때문에 그것보다는 최대한 가깝게 맞출 수 있는 Regression을 선택했다.
 <br>
-각 모델별로 Cross Validation을 통해 모델의 유효성을 검증했다. 모델의 성능 평가는 MSE를 사용했다.
+각 모델별로 Cross Validation을 통해 모델의 유효성을 검증했다. 모델의 성능 평가는 RMSE를 사용했다.
 $$
 RMSE = \sqrt{\frac{1}{n}\Sigma(\hat{y}_i - y_i)^2}
 $$
@@ -57,9 +57,10 @@ score = -1 * cross_val_score(LR_model, X_train, y_train, cv = stf, scoring = 'ne
 LR_model.fit(X_train,y_train)
 pred_y = LR_model.predict(X_test)
 ```
+
+모델의 성능은 다음과 같이 나왔다. 
 - Valid set: 21.009
 - Test set: 21.325
-
 
 ### Random Forest
 
@@ -73,6 +74,14 @@ score = -1 * cross_val_score(f_model, X_train, y_train, cv = stf, scoring = 'neg
 f_model(X_train,y_train)
 pred_y = f_model.predict(X_test)
 ```
+변수 중요도는 다음과 같은 순서로 나왔다. 
+- previous_ranking
+- top_freq
+- gg_score
+- nv_score
+- runtime
+
+모델 성능은 다음과 같이 나왔다. 
 - Valid Set: 18.771
 - Test Set: 21.330
 
@@ -91,6 +100,15 @@ score = cross_val_score(model, X_train, y_train, cv = stf, scoring = 'neg_mean_s
 cat_model.fit(X_train,y_train)
 pred_y = cat_model.predict(X_test)
 ```
+변수 중요도는 다음과 같은 순서로 나왔다. 
+- previous_ranking	
+- top_freq
+- you_rank_g
+- title_song
+- song_type
+- season
+
+모델 성능은 다음과 같이 나왔다. 
 - Valid Set: 20.827
 - Test Set: 22.286
 
@@ -109,23 +127,32 @@ score = cross_val_score(model, X_train, y_train, cv = stf, scoring = 'neg_mean_s
 xg_model.fit(X_train, y_train)
 pred_y = xg_model.predict(X_test)
 ```
+변수 중요도는 다음과 같은 순서로 나왔다. 
+- top_freq	
+- nv_score
+- runtime
+- gg_score
+- pd_score
+- total_view
+
+다른 모델과는 다르게 previous ranking이 순위 안에 없는 것을 확인할 수 있다. 다른 모델에 비해 이전 순위가 아닌 다른 변수들로 순위를 예측한 것이다. 
+
+모델 성능은 다음과 같이 나왔다. 
 - Valid Set: 18.640
 - Test Set: 21.16875
 
 
-## 모델링 과정 
+# 모델링 결과 
 
-- 각 모델별로 하이퍼 파라미터를 따로 조정하지 않고 모델을 훈련 시켰다. 
-- 그중에서 모델 성능이 가장 높은 모델을 선택해서 grid search 진행했다. 
-- 최종적으로 RMSE가 가장 낮은 XGBoost를 선정했다. 
-  - 선정 근거
-    - 다른 모델들에 비해 Cross_validation 성능이 안정적이다. 
-    - 많은 데이터들이 들어왔을 때 최대한 정확하게 맞추는 모델이 더 중요하다.
-    
-- 모델링 과정 중 이전 순위가 결측치인 경우 10으로 채워서 진행했는데, 이부분에서 문제가 발생했다. 
+- 모델링 과정 중 이전 순위가 결측치인 경우 10으로 채워서 진행했지만 문제가 있었다. 
   - 이 변수의 영향을 너무 크게 받아서 이전 순위를 그대로 따라가는 경향을 보였다.
   - 이전 순위의 경우 NA를 채우지 않고 그대로 진행했다.
-  - NA를 그대로 두고 진행했을 때 더 좋은 결과가 나왔다. 
+  - NA를 그대로 두고 진행했을 때 더 좋은 결과가 나왔다.
+
+- 모델별 변수 중요도가 다르게 나온것을 확인할 수 있다.
+- 대부분의 모델에서는 Previous ranking이 가장 중요하게 나왔지만, XGboost에서는 나름 중요한 변수이긴 했으나 6개 중에서는 나오지 않았다. 
+- 모델의 성능 평가를 보면 다른 모델에 비해 높은 성능을 보여주고 있다. 
+- 최종적으로 RMSE가 가장 낮은 XGBoost를 선정했다. 
   
   
   
