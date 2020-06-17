@@ -38,11 +38,32 @@ use_condaenv("anaconda3")
 이번 프로젝트에서는 1~200위까지 순위를 예측했다. 사용된 test 데이터는 2020년 4월 19일이고, 그 외 데이터들이 train과 validation set이다.
 
 원래 순위 예측과는 다르게 Classification이 아닌 Regression으로 순위를 예측하려고 한다. Regression을 통해 실제 순위와 얼마나 차이 나는지 파악했다. 그리고 Classification의 경우 정확하게 예측하지 않는 이상 예측 평가에서 매우 떨어지기 때문에 그것보다는 최대한 가깝게 맞출 수 있는 Regression을 선택했다.
+
 <br>
 각 모델별로 Cross Validation을 통해 모델의 유효성을 검증했다. 모델의 성능 평가는 RMSE를 사용했다.
 $$
 RMSE = \sqrt{\frac{1}{n}\Sigma(\hat{y}_i - y_i)^2}
 $$
+
+## 모델링 과정
+
+### Classification
+
+처음에는 순위를 10위 단위로 묶어서 Classification을 진행했다. 
+그러나 분석을 진행하면서 범주로 10위 단위로 묶었을 때 성능은 좋더라도 정확한 예측이라고는 판단하기 힘들었다. 
+특히 이전 순위를 그대로 따라가는 경향을 보였다. 
+왜냐하면 11위와 19위는 똑같은 범주 안에 묶여있고 주 단위로는 크게 변하지 않기 때문이다.  
+따라서 본 조는 Classification이 아닌 Regression을 통해서 1~200위를 예측하는 것이 타당하다고 생각했다. 
+
+### Regression
+
+Regression을 통해서 보려는 것은 다음과 같다. 
+
+- 예측과 실제 값 간의 차이가 얼마나 나오는지 확인한다.
+- 10위 단위가 아닌 실제 순위와 얼마나 가깝게 예측하는 지 확인하다. 
+
+
+## 모델링 결과 
 
 ### Linear Regression 
 
@@ -157,7 +178,6 @@ pred_y = xg_model.predict(X_test)
 |RandomForest|18.771|21.330|
 |CatBoost|20.827|22.286|
 |XGBoost|18.640|21.16875|
-
 
 
 
