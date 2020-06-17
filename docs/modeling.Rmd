@@ -59,6 +59,7 @@ pred_y = LR_model.predict(X_test)
 ```
 
 모델의 성능은 다음과 같이 나왔다. 
+
 - Valid set: 21.009
 - Test set: 21.325
 
@@ -75,6 +76,7 @@ f_model(X_train,y_train)
 pred_y = f_model.predict(X_test)
 ```
 변수 중요도는 다음과 같은 순서로 나왔다. 
+
 - previous_ranking
 - top_freq
 - gg_score
@@ -82,6 +84,7 @@ pred_y = f_model.predict(X_test)
 - runtime
 
 모델 성능은 다음과 같이 나왔다. 
+
 - Valid Set: 18.771
 - Test Set: 21.330
 
@@ -101,6 +104,7 @@ cat_model.fit(X_train,y_train)
 pred_y = cat_model.predict(X_test)
 ```
 변수 중요도는 다음과 같은 순서로 나왔다. 
+
 - previous_ranking	
 - top_freq
 - you_rank_g
@@ -109,6 +113,7 @@ pred_y = cat_model.predict(X_test)
 - season
 
 모델 성능은 다음과 같이 나왔다. 
+
 - Valid Set: 20.827
 - Test Set: 22.286
 
@@ -128,6 +133,7 @@ xg_model.fit(X_train, y_train)
 pred_y = xg_model.predict(X_test)
 ```
 변수 중요도는 다음과 같은 순서로 나왔다. 
+
 - top_freq	
 - nv_score
 - runtime
@@ -138,8 +144,21 @@ pred_y = xg_model.predict(X_test)
 다른 모델과는 다르게 previous ranking이 순위 안에 없는 것을 확인할 수 있다. 다른 모델에 비해 이전 순위가 아닌 다른 변수들로 순위를 예측한 것이다. 
 
 모델 성능은 다음과 같이 나왔다. 
+
 - Valid Set: 18.640
 - Test Set: 21.16875
+
+<br>
+최종적으로 다음과 같이 결과가 나왔다.
+
+|Model|Valid|Test|
+|---|--|---|
+|LinearRegression|21.009|21.325|
+|RandomForest|18.771|21.330|
+|CatBoost|20.827|22.286|
+|XGBoost|18.640|21.16875|
+
+
 
 
 # 모델링 결과 
