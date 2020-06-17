@@ -3,10 +3,10 @@
 ## crawling : codes for crawling
 
 ## model : codes for modeling
-   * logistic regression
-   * cat boost
-   * xg boost
-   * random forest
+   * Linear regression
+   * Cat Boost
+   * XG Boost
+   * Random Forest
 
 ## preprocessing_EDA : codes for preprocessing and EDA
   1. 파생변수 추가
