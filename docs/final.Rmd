@@ -22,9 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction of Project
 
-2019년 발표된 문화체육관광부의 자료에 따르면 음악 산업 시장은 2016년부터 2018년까지 꾸준하게 매출액이 증가하고 있다. 실제로 음원 시장에서 다양한 부가 가치가 창출 되고 '해외 진출에 따른 발전 가능성도 커질 것으로'(추승엽 외,2016) 기대된다. 성장하는 음원시장의 대표적인 지표로 음원 순위가 주목되고 있다. 따라서 성장하는 음원시장의 주표지표인 음원 순위를 예측하는 것만으로도 상당한 유의미한 정보가 될 것이다.
-
-추가적으로 이러한 지표를 이용하기 위해 소위 ['음원 사재기'](https://namu.wiki/w/%EC%9D%8C%EC%9B%90%20%EC%82%AC%EC%9E%AC%EA%B8%B0)로 불리는 논란이 지속되고 있다. 따라서 우리는 기존의 음원 데이터를 바탕으로 음원순위를 예측모형을 만들고, 예측 모형에 크게 벗어나는 결과가 나오다면, 음원 사재기와 같은 음원 시장 혼란 요인을 찾을 수 있을 것이다. 따라서 우리의 목표는 다음이다.
+2019년 발표된 문화체육관광부의 자료에 따르면 음악 산업 시장은 2016년부터 2018년까지 꾸준하게 매출액이 증가하고 있다. 실제로 음원 시장에서 다양한 부가 가치가 창출 되고 '해외 진출에 따른 발전 가능성도 커질 것으로'(추승엽 외,2016) 기대된다. 성장하는 음원시장의 대표적인 지표로 음원 순위가 주목되고 있다. 따라서 성장하는 음원시장의 주표지표인 음원 순위를 예측하는 것만으로도 상당한 유의미한 정보가 될 것이다. 따라서 우리의 목표는 다음이다.
 
 <br>
 <center> **음원 데이터를 활용한 주간음원순위 예측** </center>
@@ -34,7 +32,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ![](flowchart.png)
 
-## 크롤링
+# Crawling
 
 음원 시장은 시대의 특성이 반영되며 기존의 음반 산업과 다르게 '다양한 변수에 의해 영향을 받는 시장'(추승엽 외, 2016)으로 변화 하고 있다. 특히 변화하는 트랜드에 따라 '음원 시장은 유투브, SNS, 인터넷 사이트 등 다양한 플랫폼의 영향이 커지고'(김가연 외, 2018) 있다. 따라서 우리는 선행논문들을 참고하여 다음의 사이트에서 제공되는 데이터를 활용해 주간음원순위를 예측해 보고자 한다.
 
@@ -54,6 +52,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 이상 7개의 사이트의 정보 중 **2018년 4월 이후**의 데이터를 크롤링하였다. 해당 일을 기준일로 한 이유는 유튜브 데이터가 그 시점 부터 제공되었기 때문이다. 
 
+
+
 ## 사용한 변수
 
 다양한 사이트를 통해 얻은 데이터를 **기간**(주를 단위로 매주 일요일부터 토요일까지), **곡명**, **가수명**를 key로 합쳤다. 그러기 위해 각각 알맞게 전처리를 실시하였다. 예를 들어 DC데이터의 경우 갤럴리명(가수명)별로 주간 기준에 따라 분류 후, 조회수는 단순 합을, 게시글수와 추천수는 평균낸 값을 사용하였다. 
@@ -62,14 +62,6 @@ knitr::opts_chunk$set(echo = TRUE)
  
  
 이후 예측의 정확도를 높이기 위해 파생변수를 만들었다. 먼저, *이전 곡 순위*는 해당 가수명에 따른 이전의 곡 순위중 가장 높은 순위를 구했다. 그리고 *계절변수*는 각 노래가 음원차트에 올라왔을 때의그 시점의 계절을 의미한다.
-
-```{r , message=F,warning=F}     
-sge = readr::read_csv('https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/eda_data_season_genre.csv')
-plotly::plot_ly(sge, x = ~season, y = ~ seasonal_mean, color = ~genre, type = "scatter", mode = "lines+markers")
-```
-
-또한 위의 그래프를 보면 계절에 따라 장르별 평균 순위가 다른 것을 알 수 있다. 따라서 우리는 *계졀별 장르별 평균을 반영한 파생변수*를 만들었다.
-
 
 
 아래는 우리가 모형에 상용하고자 하는 데이터들의 변수 정보를 정리한 표이다. 
@@ -98,7 +90,6 @@ plotly::plot_ly(sge, x = ~season, y = ~ seasonal_mean, color = ~genre, type = "s
 |season_genre_score|(장르&계절별 평균rank_g - 장르별 평균rank_g)/(장르별 평균rank_g)$ |파생변수|
 
 
-
 아래의 테이블은 하나로 합치고 scale 전의 raw 데이터이다. 검색을 통해 그 값들을 확인해 볼 수 있다. 
 
 
@@ -109,17 +100,26 @@ DT::datatable(data, rownames = F, extensions='Buttons',
               )
 ```
 
-# EDA
 
-모형을 분석하기 전 EDA를 실시하였다.
-
-
-# Process of Data preprocessing
-
-각각의 변수별로 다른 scale인 것을 볼 수 있다. 따라서 분석을 위해 변수를 동일한 scale로 만들어 주기 위해  Mean max scaling을 실시 하였다.
+# EDA & Process of Data preprocessing
 
 
-또한 Log transformation를 실시하였다. 그 결가 아래의 그래프처럼 각 변수들이 정규화 된 것을 볼 수 있다.
+모형을 분석하기 전 EDA를 실시하였다. 또한 각각의 변수별로 다른 scale인 것을 볼 수 있다. 따라서 분석을 위해 변수를 동일한 scale로 만들어 주기 위해  Mean max scaling 및 Log transformation를 실시하였다.
+
+또한 모형의 예측력을 높이기 위해 다양한 파생변수를 추가하였다.
+
+```{r , message=F,warning=F}     
+sge = readr::read_csv('https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/eda_data_season_genre.csv')
+plotly::plot_ly(sge, x = ~season, y = ~ seasonal_mean, color = ~genre, type = "scatter", mode = "lines+markers")
+```
+
+실제로 위의 그래프를 보면 계절에 따라 장르별 평균 순위가 다른 것을 알 수 있다. 따라서 우리는 *계졀별 장르별 평균을 반영한 파생변수*를 만들었다.
+
+추가적인 과정은 다음의 주소를 통해 확인 가능하다.
+
+<br>
+<center> [자세한 EDA & Process of Data preprocessing](https://yoogunwook.github.io/1nurse4stat/EDA_Preprocessing.html) </center>
+<br>
 
 
 # Modeling
