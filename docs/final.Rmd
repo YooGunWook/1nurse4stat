@@ -3,7 +3,7 @@ title: "[음원 데이터를 활용한 주간음원순위 예측](https://github
 subtitle: "[2020-01 데이터사이언스입문 프로젝트](https://statkclee.github.io/ds-intro-2020/)"
 author: 
     name: "사응일간 ([강동원](https://github.com/dw3624), [백원희](https://github.com/Wonhee-baek), [오태환](https://github.com/dhxoghks95), [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa))"
-date: '최종수정일 : `r Sys.Date()`'
+date: '최종수정시간 : `r Sys.time()`'
 output:
   html_document: 
     toc: yes
@@ -17,7 +17,7 @@ editor_options:
 ---
 
 <details>
-    <summary><a> Contribution of Project</a></summary>
+    <summary><a style="text-decoration:none">Contribution of Project</a></summary>
     <p>
 - 문헌고찰 : [백원희](https://github.com/Wonhee-baek), [이청파](https://github.com/leechungpa)
 
@@ -56,6 +56,9 @@ editor_options:
 
 ![](./graph/flowchart.png)
 
+<br>
+<br>
+
 # Crawling
 
 음원 시장은 시대의 특성이 반영되며 기존의 음반 산업과 다르게 '다양한 변수에 의해 영향을 받는 시장'(추승엽 외, 2016)으로 변화 하고 있다. 특히 변화하는 트랜드에 따라 '음원 시장은 유투브, SNS, 인터넷 사이트 등 다양한 플랫폼의 영향이 커지고'(김가연 외, 2018) 있다. 따라서 우리는 선행논문들을 참고하여 다음의 사이트에서 제공되는 데이터를 활용해 주간음원순위를 예측해 보고자 한다.
@@ -83,8 +86,7 @@ editor_options:
 우리가 예측하고자 하는 *주간 순위*는 가온주간차트에서 뽑은 데이터이다. 이외에도 예측하기 위한 다양한 데이터를 뽑고 모형에 만들기 위해 전처리 하였다. 예를 들어 DC데이터의 경우 갤럴리명(가수명)별로 주간 기준에 따라 분류 후, 조회수는 단순 합을, 게시글수와 추천수는 평균낸 값을 사용하였다. 이렇게 다양한 사이트를 통해 얻은 데이터를 **기간**(주를 단위로 매주 일요일부터 토요일까지), **곡명**, **가수명**를 key로 합쳤다. 
 
 
-
-아래는 우리가 모형에 상용하고자 하는 데이터들의 변수 정보를 정리한 표이다. 
+아래는 우리가 모형에 사용하고자 하는 데이터들의 변수 정보를 정리한 표이다. 
 
 
 | 변수명 | 변수의 의미 | 출처 |
@@ -112,7 +114,7 @@ editor_options:
 |title_song|각 주차별 동일가수의 곡 중 가장 높은 순위가 True, 나머지가 False|파생변수|
 |previous_ranking|신곡의 경우 해당 가수의 이전곡의 마지막 순위, 기존에 있는 경우 전주차 순위|파생변수|
 |season|계절|파생변수|
-|season_genre_score|(장르&계절별 평균rank_g - 장르별 평균rank_g)/(장르별 평균rank_g)$ |파생변수|
+|season_genre_score|(장르&계절별 평균rank_g - 장르별 평균rank_g) / (장르별 평균rank_g)|파생변수|
 
 
 다음의 링크를 통해 scale 전의 raw 데이터를 볼 수 있다. 검색을 통해 그 값들을 확인해 볼 수 있다. 
@@ -122,6 +124,7 @@ editor_options:
 <br>
 
 
+<br>
 # EDA & Process of Data preprocessing
 
 
@@ -149,6 +152,9 @@ editor_options:
 - Min-Max Scaling
 
 
+<br>
+<br>
+
 # Modeling
 
 우리는 총 4가지의 모델을 사용하였고 그 중 가장 최적의 모델을 찾아 우리의 최종 모형을 사용하고자 하였다. 4가지 모델로 Logistic regression, Random forest. XG boost, Cat boost를 사용하였다. 모델 비교의 지표로 RMSE를 사용하였다. 그 결과 XG boost가 가장 좋은 결과를 보였다.
@@ -165,6 +171,9 @@ editor_options:
 
 <br>
 <center> [자세한 Modeling](https://yoogunwook.github.io/1nurse4stat/modeling.html) </center>
+<br>
+
+
 <br>
 
 # Shiny Visualization
@@ -189,6 +198,8 @@ editor_options:
 <br>
 
 
+<br>
+
 # Result
 
 
@@ -208,6 +219,7 @@ editor_options:
 
 이처럼 가장 낮은 RMSE를 보인 XGboost 모형을 이용하여 각각의 변수별로 주간 순위를 예측할 수 있을 것이다. 이를 통해 마케팅 목적 등에 활용할 수 있다. 또한 우리의 탐구를 발전 시킨다면 국내 시장 뿐만 아니라 비슷한 국외 시장에서도 모형을 만드는데 참고할 수 있을 것이다.
 
+
 ## 제한점 및 추후 보완점
 
 - 크롤링의 제한 : DC 등 일부 data의 NA가 너무 많았다.
@@ -219,6 +231,10 @@ editor_options:
 - 데이터 크롤링을 실시간으로 만들어 shiny를 구현한다면 변수를 전부 입력하는 수고를 줄이는 dashboad를 구현 가능하다.
 
 
+
+<br>
+
+<br>
 
 # References
 
