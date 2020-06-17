@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction of Project
 
-2019년 발표된 문화체육관광부의 자료에 따르면 음악 산업 시장은 2016년부터 2018년까지 꾸준하게 매출액이 증가하고 있다. 실제로 음원 시장에서 다양한 부가 가치가 창출 되고 '해외 진출에 따른 발전 가능성도 커질 것으로'(추승엽 외,2016) 기대된다. 성장하는 음원시장의 대표적인 지표로 음원 순위가 주목되고 있다. 따라서 성장하는 음원시장의 주표지표인 음원 순위를 예측하는 것만으로도 상당한 유의미한 정보가 될 것이다. 따라서 우리의 목표는 다음이다.
+2019년 발표된 문화체육관광부의 자료에 따르면 음악 산업 시장은 2016년부터 2018년까지 꾸준하게 매출액이 증가하고 있다. 실제로 음원 시장에서 다양한 부가 가치가 창출 되고 '해외 진출에 따른 발전 가능성도 커질 것으로'(추승엽 외,2016) 기대된다. 성장하는 음원시장의 대표적인 지표로 음원 순위가 주목되고 있다. 따라서 성장하는 음원시장의 주표지표인 음원 순위를 예측하는 것만으로도 상당한 유의미한 정보가 될 것이다. 그래서 우리는 다음을 목표로 정하였다.
 
 <br>
 <center> **음원 데이터를 활용한 주간음원순위 예측** </center>
@@ -56,19 +56,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 사용한 변수
 
-다양한 사이트를 통해 얻은 데이터를 **기간**(주를 단위로 매주 일요일부터 토요일까지), **곡명**, **가수명**를 key로 합쳤다. 그러기 위해 각각 알맞게 전처리를 실시하였다. 예를 들어 DC데이터의 경우 갤럴리명(가수명)별로 주간 기준에 따라 분류 후, 조회수는 단순 합을, 게시글수와 추천수는 평균낸 값을 사용하였다. 
+우리가 예측하고자 하는 *주간 순위*는 가온주간차트에서 뽑은 데이터이다. 이외에도 예측하기 위한 다양한 데이터를 뽑고 모형에 만들기 위해 전처리 하였다. 예를 들어 DC데이터의 경우 갤럴리명(가수명)별로 주간 기준에 따라 분류 후, 조회수는 단순 합을, 게시글수와 추천수는 평균낸 값을 사용하였다. 이렇게 다양한 사이트를 통해 얻은 데이터를 **기간**(주를 단위로 매주 일요일부터 토요일까지), **곡명**, **가수명**를 key로 합쳤다. 
 
-또한 우리가 예측하고자 하는 *주간 순위*는 가온차트에서 뽑은 1~100위 까지의 순위를 10개의 그룹으로 나누어 만들었다. 즉 1그룹은 1위~10위를, 2그룹은 11위~20위를, 10그룹은 91위~100위를 의미한다.
- 
- 
-이후 예측의 정확도를 높이기 위해 파생변수를 만들었다. 먼저, *이전 곡 순위*는 해당 가수명에 따른 이전의 곡 순위중 가장 높은 순위를 구했다. 그리고 *계절변수*는 각 노래가 음원차트에 올라왔을 때의그 시점의 계절을 의미한다.
 
 
 아래는 우리가 모형에 상용하고자 하는 데이터들의 변수 정보를 정리한 표이다. 
- 
+
+
 | 변수명 | 변수의 의미 | 출처 |
 | :----: | :---------- | :--- |
-|rank_g|10구간화한 곡 순위|가온차트|
+|rank|주간 곡 순위|가온차트|
+|week|해당 차트의 주|가온차트|
+|artist|가수명|가온차트|
+|name|곡명|가온차트|
+|st_day|해당 차트의 주, train, test데이터 분할에 사용|가온차트|
 |genre|노래 장르|지니|
 |sex|가수 성별|지니|
 |song_type|음악종류|지니|
@@ -80,21 +81,20 @@ knitr::opts_chunk$set(echo = TRUE)
 |nv_score|가수별 주간 네이버 트렌드 지수|네이버 데이터랩|
 |pd_score|소속사 네이버 트렌드 지수|네이버 데이터랩|
 |dc_total_numb|가수별 주간 게시물 총수|DC 갤러리|
-|dc_mean_reccomend|가수별 주간 평균 추천수|DC 갤러리|
+|dc_mean_recommend|가수별 주간 평균 추천수|DC 갤러리|
 |dc_mean_views|가수별 주간 평균 조회수|DC 갤러리|
 |drama_view|OST곡일 경우 해당프로그램 시청률|Nielsen코리아|
 |top_freq|100위 안에 가수가 얼마나 많이 차트에 곡을 올렸는지 4분위수|파생변수|
 |title_song|각 주차별 동일가수의 곡 중 가장 높은 순위가 True, 나머지가 False|파생변수|
-|previous_ranking|신곡의 경우 이전 곡의 최고순위, 기존에 있는 경우 전주차 순위|파생변수|
+|previous_ranking|신곡의 경우 해당 가수의 이전곡의 마지막 순위, 기존에 있는 경우 전주차 순위|파생변수|
 |season|계절|파생변수|
 |season_genre_score|(장르&계절별 평균rank_g - 장르별 평균rank_g)/(장르별 평균rank_g)$ |파생변수|
 
 
 아래의 테이블은 하나로 합치고 scale 전의 raw 데이터이다. 검색을 통해 그 값들을 확인해 볼 수 있다. 
 
-
 ```{r , message=F, warning=F}
-data = readr::read_csv(file="https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/raw_model_data.csv")
+data = readr::read_csv(file="https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/shiny/data/finalresult_graph_final_5.csv")
 DT::datatable(data, rownames = F, extensions='Buttons',
               options=list(dom='Bfrtip',buttons=c(I('colvis'),'copy', 'csv', 'excel', 'pdf', 'print'))
               )
@@ -104,54 +104,109 @@ DT::datatable(data, rownames = F, extensions='Buttons',
 # EDA & Process of Data preprocessing
 
 
-모형을 분석하기 전 EDA를 실시하였다. 또한 각각의 변수별로 다른 scale인 것을 볼 수 있다. 따라서 분석을 위해 변수를 동일한 scale로 만들어 주기 위해  Mean max scaling 및 Log transformation를 실시하였다.
-
-또한 모형의 예측력을 높이기 위해 다양한 파생변수를 추가하였다.
-
-```{r , message=F,warning=F}     
-sge = readr::read_csv('https://raw.githubusercontent.com/YooGunWook/1nurse4stat/master/data/model_data/eda_data_season_genre.csv')
-plotly::plot_ly(sge, x = ~season, y = ~ seasonal_mean, color = ~genre, type = "scatter", mode = "lines+markers")
-```
-
-실제로 위의 그래프를 보면 계절에 따라 장르별 평균 순위가 다른 것을 알 수 있다. 따라서 우리는 *계졀별 장르별 평균을 반영한 파생변수*를 만들었다.
-
-추가적인 과정은 다음의 주소를 통해 확인 가능하다.
+모형을 분석하기 전 EDA를 실시하였고, 예측의 정확도를 높이기 위해 파생변수를 만들었다. 그중 가장 중요한 파생변수는 *previous_ranking*로 이전 곡 순위를 의미하는 변수이다. 이외에도 여러 파생변수를 만들었으며 scale을 하였다. 자세한 과정은 다음의 링크를 통해 확인 가능하다.
 
 <br>
 <center> [자세한 EDA & Process of Data preprocessing](https://yoogunwook.github.io/1nurse4stat/EDA_Preprocessing.html) </center>
 <br>
 
 
+## 파생변수 생성
+
+- title_song : 높은 인기로 인해 음원차트에 2곡 이상의 곡을 진입시킨 가수들이 있다. 타이틀곡이 아닌 곡의 경우에는 가수의 다른 지표가 좋아도 타이틀곡에 비해 순위가 낮을 수 밖에 없다. 따라서 그 주차에 한 가수가 진입시킨 곡들 중에 가장 순위가 높은 곡을 title_song이라고 정하고 title_song인 경우는 TRUE, 아닌 경우는 FALSE를 할당하는 변수를 만들었다.
+
+- previous_ranking : 당연히 음원차트 순위 예측은 이전 순위에 영향을 받을 것이다. 따라서 기존에 차트에 있는 곡은 이전주차 순위를, 신곡의 경우는 그 가수가 직전에 낸 음반의 title_song의 rank_g중 가장 높은(1에 가까운) 순위를 할당하였다.
+
+- top_freq 생성 : 음원 중엔 소위 "연금"이라고 불리는 곡들이 있다. 장기간 차트에 진입했다는 것을 의미한다. 우리는 그러한 오랜 기간 사랑받은 곡을 판별하기 위해 이러한 변수를 만들었다. 그 곡이 Top 100에 얼마나 많이 올렸는지를 세어 4그룹으로 나누었다.
+
+- season_genre_score 생성 : 가을 겨울엔 발라드, 여름엔 댄스. 보통 사람들의 인식 속에 계절별로 인기있는 장르가 다르다. 실제로도 그런 경향이 있는지 확인하고 싶었다.
+
+## Transformation for skewed data
+
+왜도가 커보이는 데이터들을 찾아 log transformation으로 최대한 정규분포로 맞춰주었다.
+
+## Scaling
+
+Min-Max Scaling을 진행했다.
+
+
 # Modeling
 
-우리는 총 4가지의 모델을 사용하였고 그 중 가장 최적의 모델을 찾아 우리의 최종 모형을 사용하고자 하였다. 4가지 모델로 Logistic regression, Random forest. XG boost, Cat boost를 사용하였다. 모델 비교의 지표로 F1-score를 사용하였다.
+우리는 총 4가지의 모델을 사용하였고 그 중 가장 최적의 모델을 찾아 우리의 최종 모형을 사용하고자 하였다. 4가지 모델로 Logistic regression, Random forest. XG boost, Cat boost를 사용하였다. 모델 비교의 지표로 F1-score를 사용하였다. 그 결과 Cat boost가 가장 좋은 결과를 보였다.
+
+- Logistic regression
+
+- Random forest
+
+- XG boost
+
+- Cat boost
 
 
-## Logistic regression
+# Shiny Visualization
 
-ordinal 변수이기에 cumulative logistic regression을 사용하는 것이 적절하나, 다른 모델은 random forest와 boost 기법을 사용하고, 우리의 목표도 순위 예측이기에 설명력보다는 예측력 모델인 generalized logistic regression을 실시하였다. 그 결과는 다음과 같다.
+이상의 결과에서 Cat boost를 사용했을 때 가장 높은 F1-score를 보였다. 이 모형을 우리의 최종 예측모형으로 정하고,`Shiny` 패키지를 이용해 반응형 웹을 구현하였다. 아래의 주소를 통해 들어가 직접 예측을 해볼 수 있다.
 
-## Random forest
-
-
-## XG boost
-
-
-## Cat boost
-
-
-범주형 변수 많아서 Grid Search를 통해서 최적의 Hyper Parameter 탐색
 
 
 # Result
 
-이상의 결과에서 Cat boost를 사용했을 때 가장 높은 F1-score를 보였다. 이 모형을 우리의 최종 예측모형으로 정하고,`Shiny` 패키지를 이용해 반응형 웹을 구현하였다. 아래의 주소를 통해 들어가 직접 예측을 해볼 수 있다.
+
+ordinal 변수이기에 cumulative logistic regression을 사용하는 것이 적절하나, 다른 모델은 random forest와 boost 기법을 사용하고, 우리의 목표도 순위 예측이기에 설명력보다는 예측력 모델인 generalized logistic regression을 실시하였다. 그 결과는 다음과 같다.
+
+dc 등 NA가 너무 많았다
+
+시각화에 어려움 : 정확히
+
+preivious에 영향 크게 받는다
+그래서 다른 변수가 안중요해자ㅣㅏㅁ
+
+randomforest 말고 다른 모형
+
+범주의 개수가 많아 overfittig?
+
+
+
+좀더 inmportance 높은거 모형 정교화 하면 좋은 결과 가능할듯
+
+
+국내 시장  뿐만아니라 세계 시장 에 다른 데이터도 가능할 수도 
+
+
+
+마케팅 요소로 활용할 만한 측면
+
+
+
+추후 outlier을 좀더 주목하게 탐색할 방법을 찾아야 할 것 같다.
+
+
+
+
+청파씨 마지막에 정리할때,
+프로젝트의 제한점, 강점, 제언 이런 순으로 말하면 좋을것 같아요. 
+
+강점; 
+-아직 공식적으로 출판된 논문이 있거나, 공식화된 사이트 등이 없기 때문에 국내에 처음으로 시도된 음원 순위 예측 프로젝트였다.
+-크롤링의 제한이 있었기 때문에, 다양한 방법으로 파생변수를 추가하였다.
+-상업화에 연결할수 있다(이건 구체적으로 생각해 볼게요)
+
+제언;
+데이터를 받아서 주기적으로 업데이트 하는 방법을 고려해야겠다(?)
+우리나라 음원의 해외 진출이 늘어나고 있으므로 미국내에서 해외(미국으로 따지면 kpop, jpop이 성공한 사례)의 음원 순위 예측 프로젝트로 확장할 수 있겠다. 
+
+그리고 마지막에 각자 소감 한마디씩 적어서 교수님과 수업을 칭찬하면 되게 되게 좋아하실것 같아요. 
+이것도 하게되면 청파씨가 사회자 입장에서 말하면 좋을것 같아요. 
+
+제가 적은 말은 발표 안 해도 괜찮아요. 생각나는대로 써둘게요~
+
 
 
 
 
 
 # References
+
 - [곽아영 (2017) 데이터 분석을 통한 온라인 음원차트의 어뷰징 영향요인 탐색](http://www.riss.kr/search/detail/DetailView.do?p_mat_type=be54d9b8bc7cdb09&control_no=96155f174d1eb757ffe0bdc3ef48d419&outLink=K)
 
 - [정종범 (2019) 디지털 음원 시장의 현황 분석](http://www.riss.kr/search/detail/DetailView.do?p_mat_type=be54d9b8bc7cdb09&control_no=b8a6efe3d585b804ffe0bdc3ef48d419)
