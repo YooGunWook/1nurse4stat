@@ -1680,7 +1680,11 @@ RMSE = \sqrt{\frac{1}{n}\Sigma(\hat{y}_i - y_i)^2}
 <a class="sourceLine" id="cb2-4" data-line-number="4">score <span class="op">=</span> <span class="dv">-1</span> <span class="op">*</span> cross_val_score(LR_model, X_train, y_train, cv <span class="op">=</span> stf, scoring <span class="op">=</span> <span class="st">'neg_mean_squared_error'</span>)</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">LR_model.fit(X_train,y_train)</a>
 <a class="sourceLine" id="cb2-6" data-line-number="6">pred_y <span class="op">=</span> LR_model.predict(X_test)</a></code></pre></div>
-<p>모델의 성능은 다음과 같이 나왔다. - Valid set: 21.009 - Test set: 21.325</p>
+<p>모델의 성능은 다음과 같이 나왔다.</p>
+<ul>
+<li>Valid set: 21.009</li>
+<li>Test set: 21.325</li>
+</ul>
 </div>
 <div id="random-forest" class="section level3">
 <h3><span class="header-section-number">1.1.2</span> Random Forest</h3>
@@ -1693,8 +1697,19 @@ RMSE = \sqrt{\frac{1}{n}\Sigma(\hat{y}_i - y_i)^2}
 <a class="sourceLine" id="cb3-3" data-line-number="3">score <span class="op">=</span> <span class="dv">-1</span> <span class="op">*</span> cross_val_score(f_model, X_train, y_train, cv <span class="op">=</span> stf, scoring <span class="op">=</span> <span class="st">'neg_mean_squared_error'</span>)</a>
 <a class="sourceLine" id="cb3-4" data-line-number="4">f_model(X_train,y_train)</a>
 <a class="sourceLine" id="cb3-5" data-line-number="5">pred_y <span class="op">=</span> f_model.predict(X_test)</a></code></pre></div>
-<p>변수 중요도는 다음과 같은 순서로 나왔다. - previous_ranking - top_freq - gg_score - nv_score - runtime</p>
-<p>모델 성능은 다음과 같이 나왔다. - Valid Set: 18.771 - Test Set: 21.330</p>
+<p>변수 중요도는 다음과 같은 순서로 나왔다.</p>
+<ul>
+<li>previous_ranking</li>
+<li>top_freq</li>
+<li>gg_score</li>
+<li>nv_score</li>
+<li>runtime</li>
+</ul>
+<p>모델 성능은 다음과 같이 나왔다.</p>
+<ul>
+<li>Valid Set: 18.771</li>
+<li>Test Set: 21.330</li>
+</ul>
 </div>
 <div id="catboost" class="section level3">
 <h3><span class="header-section-number">1.1.3</span> Catboost</h3>
@@ -1709,9 +1724,21 @@ RMSE = \sqrt{\frac{1}{n}\Sigma(\hat{y}_i - y_i)^2}
 <a class="sourceLine" id="cb4-4" data-line-number="4">score <span class="op">=</span> cross_val_score(model, X_train, y_train, cv <span class="op">=</span> stf, scoring <span class="op">=</span> <span class="st">'neg_mean_squared_error'</span>)</a>
 <a class="sourceLine" id="cb4-5" data-line-number="5">cat_model.fit(X_train,y_train)</a>
 <a class="sourceLine" id="cb4-6" data-line-number="6">pred_y <span class="op">=</span> cat_model.predict(X_test)</a></code></pre></div>
-<p>변수 중요도는 다음과 같은 순서로 나왔다. - previous_ranking<br />
-- top_freq - you_rank_g - title_song - song_type - season</p>
-<p>모델 성능은 다음과 같이 나왔다. - Valid Set: 20.827 - Test Set: 22.286</p>
+<p>변수 중요도는 다음과 같은 순서로 나왔다.</p>
+<ul>
+<li>previous_ranking<br />
+</li>
+<li>top_freq</li>
+<li>you_rank_g</li>
+<li>title_song</li>
+<li>song_type</li>
+<li>season</li>
+</ul>
+<p>모델 성능은 다음과 같이 나왔다.</p>
+<ul>
+<li>Valid Set: 20.827</li>
+<li>Test Set: 22.286</li>
+</ul>
 </div>
 <div id="xgboost" class="section level3">
 <h3><span class="header-section-number">1.1.4</span> XGboost</h3>
@@ -1726,10 +1753,54 @@ RMSE = \sqrt{\frac{1}{n}\Sigma(\hat{y}_i - y_i)^2}
 <a class="sourceLine" id="cb5-4" data-line-number="4">score <span class="op">=</span> cross_val_score(model, X_train, y_train, cv <span class="op">=</span> stf, scoring <span class="op">=</span> <span class="st">'neg_mean_squared_error'</span>)</a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">xg_model.fit(X_train, y_train)</a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">pred_y <span class="op">=</span> xg_model.predict(X_test)</a></code></pre></div>
-<p>변수 중요도는 다음과 같은 순서로 나왔다. - top_freq<br />
-- nv_score - runtime - gg_score - pd_score - total_view</p>
+<p>변수 중요도는 다음과 같은 순서로 나왔다.</p>
+<ul>
+<li>top_freq<br />
+</li>
+<li>nv_score</li>
+<li>runtime</li>
+<li>gg_score</li>
+<li>pd_score</li>
+<li>total_view</li>
+</ul>
 <p>다른 모델과는 다르게 previous ranking이 순위 안에 없는 것을 확인할 수 있다. 다른 모델에 비해 이전 순위가 아닌 다른 변수들로 순위를 예측한 것이다.</p>
-<p>모델 성능은 다음과 같이 나왔다. - Valid Set: 18.640 - Test Set: 21.16875</p>
+<p>모델 성능은 다음과 같이 나왔다.</p>
+<ul>
+<li>Valid Set: 18.640</li>
+<li>Test Set: 21.16875</li>
+</ul>
+<p><br> 최종적으로 다음과 같이 결과가 나왔다.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Valid</th>
+<th>Test</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>LinearRegression</td>
+<td>21.009</td>
+<td>21.325</td>
+</tr>
+<tr class="even">
+<td>RandomForest</td>
+<td>18.771</td>
+<td>21.330</td>
+</tr>
+<tr class="odd">
+<td>CatBoost</td>
+<td>20.827</td>
+<td>22.286</td>
+</tr>
+<tr class="even">
+<td>XGBoost</td>
+<td>18.640</td>
+<td>21.16875</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
