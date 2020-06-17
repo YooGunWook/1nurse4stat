@@ -17,27 +17,28 @@ editor_options:
 ---
 
 <details>
-    <summary>Contribution of Project</summary>
+    <summary><a> Contribution of Project</a></summary>
     <p>
-- 문헌고찰 : 백원희, 이청파
+- 문헌고찰 : [백원희](https://github.com/Wonhee-baek), [이청파](https://github.com/leechungpa)
 
-- Crawling : 강동원, 오태환, 유건욱, 이청파
+- Crawling : [강동원](https://github.com/dw3624), [오태환](https://github.com/dhxoghks95), [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa)
 
-- Preprocessing : 백원희, 오태환, 이청파
+- Preprocessing : [백원희](https://github.com/Wonhee-baek), [오태환](https://github.com/dhxoghks95), [이청파](https://github.com/leechungpa)
 
-- EDA : 오태환
+- EDA : [오태환](https://github.com/dhxoghks95)
 
-- Modeling : 유건욱, 오태환
+- Modeling : [유건욱](https://github.com/YooGunWook), [오태환](https://github.com/dhxoghks95)
 
-- Github 관리 : 유건욱, 이청파
+- Github 관리 : [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa)
 
-- 중간발표자료 Rmd(presentation) : 백원희
+- 중간발표자료 Rmd(presentation) : [백원희](https://github.com/Wonhee-baek)
 
-- 최종발표자료 RMD(html) : 유건욱, 오태환, 이청파
+- 최종발표자료 RMD(html) : [유건욱](https://github.com/YooGunWook), [오태환](https://github.com/dhxoghks95), [이청파](https://github.com/leechungpa)
 
-- Shiny Visualizaiton : 강동원
+- Shiny Visualizaiton : [강동원](https://github.com/dw3624)
     </p>
 </details>
+<br>
 
 
 
