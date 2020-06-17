@@ -6,7 +6,6 @@ library(DT)
 library(devtools)
 library(htmltools)
 library(dashboardthemes)
-source('ui_rankest.R',local=TRUE) #rank estimate
 source('ui_graph1.R',local=TRUE) #rank fluctuation
 source('ui_data.R',local=TRUE) #datatable
 
@@ -18,7 +17,6 @@ dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem('Ranking Fluctuation',icon=icon('chart-line',lib='font-awesome'),tabName='tab_graph1'),
-      menuItem('Ranking Estimation',icon=icon('music',lib='font-awesome'),tabName='tab_rankest'),
       menuItem('DataTable',icon=icon('table',lib='font-awesome'),tabName='tab_data')
 
 
@@ -32,7 +30,6 @@ dashboardPage(
     
     tabItems(
       tabItem_graph1
-      ,tabItem_rankest
       ,tabItem_data
       )
   )
