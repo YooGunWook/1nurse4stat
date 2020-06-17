@@ -1,16 +1,9 @@
-
-<style>
-body{
-     font-family: 나눔바른고딕;
-}
-</style>
-
-
 # 데이터사이언스입문 프로젝트 (사응일간)
 
 <details>
     <summary><a> Contribution of Project</a></summary>
     <p>
+
 - 문헌고찰 : [백원희](https://github.com/Wonhee-baek), [이청파](https://github.com/leechungpa)
 
 - Crawling : [강동원](https://github.com/dw3624), [오태환](https://github.com/dhxoghks95), [유건욱](https://github.com/YooGunWook), [이청파](https://github.com/leechungpa)
