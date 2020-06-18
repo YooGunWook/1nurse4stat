@@ -36,7 +36,7 @@
 
 - [Raw data table](https://yoogunwook.github.io/1nurse4stat/table.html)
 
-- [EDA & Process of Data preprocessing](https://yoogunwook.github.io/1nurse4stat/EDA_Preprocessing.html)
+- [Preprocessing with EDA](https://yoogunwook.github.io/1nurse4stat/EDA_Preprocessing.html)
 
 - [Modeling](https://yoogunwook.github.io/1nurse4stat/modeling.html)
 
