@@ -35,10 +35,10 @@ output$plot<-renderPlotly({
 
 
 vcolor=function(x){
-  ifelse(20>abs(x),'green',ifelse(70>abs(x),'yellow','red'))
+  ifelse(11>abs(x),'green',ifelse(38>abs(x),'yellow','red'))
 }
 vicon=function(x){
-  icon(ifelse(20>abs(temp2$diff_rank),'smile-wink',ifelse(70>abs(temp2$diff_rank),'surprise','meh-rolling-eyes')))
+  icon(ifelse(11>abs(temp2$diff_rank),'smile-wink',ifelse(38>abs(temp2$diff_rank),'surprise','meh-rolling-eyes')))
 }
 
 
@@ -54,8 +54,8 @@ output$diffbox1<-renderValueBox({
   valueBox(
     -round(v1$diff_rank),
     subtitle='1st Week',
-    color=ifelse(20>abs(v1$diff_rank),'green',ifelse(70>abs(v1$diff_rank),'yellow','red')),
-    icon=icon(ifelse(20>abs(v1$diff_rank),'smile-wink',ifelse(70>abs(v1$diff_rank),'surprise','meh-rolling-eyes')))
+    color=ifelse(11>abs(v1$diff_rank),'green',ifelse(38>abs(v1$diff_rank),'yellow','red')),
+    icon=icon(ifelse(11>abs(v1$diff_rank),'smile-wink',ifelse(38>abs(v1$diff_rank),'surprise','meh-rolling-eyes')))
     )
 })
 
@@ -69,8 +69,8 @@ output$diffbox2<-renderValueBox({
   valueBox(
     -round(v2$diff_rank),
     subtitle='2nd Week',
-    color=ifelse(20>abs(v2$diff_rank),'green',ifelse(70>abs(v2$diff_rank),'yellow','red')),
-    icon=icon(ifelse(20>abs(v2$diff_rank),'smile-wink',ifelse(70>abs(v2$diff_rank),'surprise','meh-rolling-eyes'))) 
+    color=ifelse(11>abs(v2$diff_rank),'green',ifelse(38>abs(v2$diff_rank),'yellow','red')),
+    icon=icon(ifelse(11>abs(v2$diff_rank),'smile-wink',ifelse(38>abs(v2$diff_rank),'surprise','meh-rolling-eyes'))) 
     )
 })
 
@@ -84,8 +84,8 @@ output$diffbox3<-renderValueBox({
   valueBox(
     -round(v3$diff_rank),
     subtitle='3rd Week',
-    color=ifelse(20>abs(v3$diff_rank),'green',ifelse(70>abs(v3$diff_rank),'yellow','red')),
-    icon=icon(ifelse(20>abs(v3$diff_rank),'smile-wink',ifelse(70>abs(v3$diff_rank),'surprise','meh-rolling-eyes')))
+    color=ifelse(11>abs(v3$diff_rank),'green',ifelse(38>abs(v3$diff_rank),'yellow','red')),
+    icon=icon(ifelse(11>abs(v3$diff_rank),'smile-wink',ifelse(38>abs(v3$diff_rank),'surprise','meh-rolling-eyes')))
     )
 })
 
@@ -99,8 +99,8 @@ output$diffbox4<-renderValueBox({
   valueBox(
     -round(v4$diff_rank),
     subtitle='4th Week',
-    color=ifelse(20>abs(v4$diff_rank),'green',ifelse(70>abs(v4$diff_rank),'yellow','red')),
-    icon=icon(ifelse(20>abs(v4$diff_rank),'smile-wink',ifelse(70>abs(v4$diff_rank),'surprise','meh-rolling-eyes')))
+    color=ifelse(11>abs(v4$diff_rank),'green',ifelse(38>abs(v4$diff_rank),'yellow','red')),
+    icon=icon(ifelse(11>abs(v4$diff_rank),'smile-wink',ifelse(38>abs(v4$diff_rank),'surprise','meh-rolling-eyes')))
   )
 })
 
@@ -114,8 +114,8 @@ output$diffbox5<-renderValueBox({
   valueBox(
     -round(v5$diff_rank),
     subtitle='5th Week',
-    color=ifelse(20>abs(v5$diff_rank),'green',ifelse(70>abs(v5$diff_rank),'yellow','red')),
-    icon=icon(ifelse(20>abs(v5$diff_rank),'smile-wink',ifelse(70>abs(v5$diff_rank),'surprise','meh-rolling-eyes')))
+    color=ifelse(11>abs(v5$diff_rank),'green',ifelse(38>abs(v5$diff_rank),'yellow','red')),
+    icon=icon(ifelse(11>abs(v5$diff_rank),'smile-wink',ifelse(38>abs(v5$diff_rank),'surprise','meh-rolling-eyes')))
   )
 })
 
